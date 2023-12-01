@@ -17,7 +17,7 @@ DESCRIPTION
 variable "eventhub_namespace_auto_inflate_enabled" {
   description = "Is Auto Inflate enabled for the EventHub Namespace?"
   type        = bool
-  default     = null
+  default     = false
 }
 
 variable "eventhub_namespace_dedicated_cluster_id" {

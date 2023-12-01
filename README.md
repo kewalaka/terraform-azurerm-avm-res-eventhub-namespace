@@ -97,7 +97,7 @@ Description: Is Auto Inflate enabled for the EventHub Namespace?
 
 Type: `bool`
 
-Default: `null`
+Default: `false`
 
 ### <a name="input_eventhub_namespace_capacity"></a> [eventhub\_namespace\_capacity](#input\_eventhub\_namespace\_capacity)
 
