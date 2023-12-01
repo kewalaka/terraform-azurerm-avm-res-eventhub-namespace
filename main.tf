@@ -1,14 +1,55 @@
-# TODO: insert resources here.
 data "azurerm_resource_group" "parent" {
   count = var.location == null ? 1 : 0
   name  = var.resource_group_name
 }
 
-resource "azurerm_TODO_the_resource_for_this_module" "this" {
-  name                = var.name # calling code must supply the name
-  resource_group_name = var.resource_group_name
-  location            = coalesce(var.location, data.azurerm_resource_group.parent[0].location)
-  // etc
+resource "azurerm_eventhub_namespace" "this" {
+  name                          = var.name # calling code must supply the name
+  resource_group_name           = var.resource_group_name
+  location                      = try(data.azurerm_resource_group.parent[0].location, var.location)
+  sku                           = var.eventhub_namespace_sku
+  capacity                      = var.eventhub_namespace_capacity
+  auto_inflate_enabled          = var.eventhub_namespace_auto_inflate_enabled
+  dedicated_cluster_id          = var.eventhub_namespace_dedicated_cluster_id
+  local_authentication_enabled  = var.eventhub_namespace_local_authentication_enabled
+  maximum_throughput_units      = var.eventhub_namespace_maximum_throughput_units
+  minimum_tls_version           = 1.2
+  public_network_access_enabled = var.public_network_access_enabled
+
+  zone_redundant = var.zone_redundant
+
+  dynamic "identity" {
+    for_each = var.managed_identities != null ? { this = var.managed_identities } : {}
+    content {
+      type         = identity.value.system_assigned && length(identity.value.user_assigned_resource_ids) > 0 ? "SystemAssigned, UserAssigned" : length(identity.value.user_assigned_resource_ids) > 0 ? "UserAssigned" : "SystemAssigned"
+      identity_ids = identity.value.user_assigned_resource_ids
+    }
+  }
+
+
+  dynamic "network_rule_setss" {
+    for_each = var.eventhub_network_rulesets != null ? { this = var.eventhub_network_rulesets } : {}
+    content {
+      default_action                 = network_rule_sets.value.default_action
+      public_network_access_enabled  = network_rule_sets.value.public_network_access_enabled
+      trusted_service_access_enabled = network_rule_sets.value.trusted_service_access_enabled
+
+      dynamic "ip_rule" {
+        for_each = network_rule_sets.value.ip_rule
+        content {
+          action   = ip_rule.value.action
+          ip_range = ip_rule.value.ip_range
+        }
+      }
+      dynamic "virtual_network_rule" {
+        for_each = network_rule_sets.value.virtual_network_rule
+        content {
+          ignore_missing_virtual_network_service_endpoint = virtual_network_rule.value.ignore_missing_virtual_network_service_endpoint
+          subnet_id                                       = virtual_network_rule.value.subnet_id
+        }
+      }
+    }
+  }
 }
 
 # required AVM resources interfaces

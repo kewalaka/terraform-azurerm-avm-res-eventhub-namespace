@@ -43,4 +43,12 @@ module "MYMODULE" {
   name                = "" # TODO update with module.naming.<RESOURCE_TYPE>.name_unique
   resource_group_name = azurerm_resource_group.this.name
 
+  event_hubs = {
+    default_event_hub = {
+      partition_count   = 4
+      message_retention = 7
+      // Add more default values if needed
+    }
+    // Add more default event hubs if needed
+  }
 }

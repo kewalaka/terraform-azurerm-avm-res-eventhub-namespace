@@ -48,6 +48,14 @@ variable "lock" {
   }
 }
 
+variable "managed_identities" {
+  type = object({
+    system_assigned            = optional(bool, false)
+    user_assigned_resource_ids = optional(set(string), [])
+  })
+  default = {}
+}
+
 variable "role_assignments" {
   type = map(object({
     role_definition_id_or_name             = string
@@ -124,3 +132,9 @@ A map of private endpoints to create on this resource. The map key is deliberate
   - `private_ip_address` - The private IP address of the IP configuration.
 DESCRIPTION
 }
+
+variable "tags" {
+  type    = map(any)
+  default = {}
+}
+  
