@@ -38,23 +38,10 @@ variable "eventhub_namespace_maximum_throughput_units" {
 }
 
 variable "eventhub_namespace_zone_redundant" {
-  description = "Specifies if the EventHub Namespace should be Zone Redundant (created across Availability Zones)."
+  description = "Specifies if the EventHub Namespace should be Zone Redundant (created across Availability Zones). Changing this forces a new resource to be created. Defaults to `true`."
   type        = bool
   default     = false
 }
-
-variable "eventhub_local_authentication_enabled" {
-  description = "Is SAS authentication enabled for the EventHub Namespace?"
-  type        = bool
-  default     = true
-}
-
-variable "eventhub_public_network_access_enabled" {
-  description = "Is public network access enabled for the EventHub Namespace?"
-  type        = bool
-  default     = true
-}
-
 
 variable "eventhub_network_rulesets" {
   type = object({
@@ -100,10 +87,4 @@ variable "public_network_access_enabled" {
   description = "Is public network access enabled for the EventHub Namespace? Defaults to `false`."
   type        = bool
   default     = false
-}
-
-variable "zone_redundant" {
-  description = " Specifies if the EventHub Namespace should be Zone Redundant (created across Availability Zones). Changing this forces a new resource to be created. Defaults to `true`."
-  type        = bool
-  default     = true
 }

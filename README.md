@@ -14,13 +14,15 @@ The following requirements are needed by this module:
 
 - <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) (>= 3.71.0, < 4.0.0)
 
+- <a name="requirement_random"></a> [random](#requirement\_random) (>= 3.5.0, < 4.0.0)
+
 ## Providers
 
 The following providers are used by this module:
 
 - <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) (>= 3.71.0, < 4.0.0)
 
-- <a name="provider_random"></a> [random](#provider\_random)
+- <a name="provider_random"></a> [random](#provider\_random) (>= 3.5.0, < 4.0.0)
 
 ## Resources
 
@@ -83,14 +85,6 @@ map(object({
 
 Default: `{}`
 
-### <a name="input_eventhub_local_authentication_enabled"></a> [eventhub\_local\_authentication\_enabled](#input\_eventhub\_local\_authentication\_enabled)
-
-Description: Is SAS authentication enabled for the EventHub Namespace?
-
-Type: `bool`
-
-Default: `true`
-
 ### <a name="input_eventhub_namespace_auto_inflate_enabled"></a> [eventhub\_namespace\_auto\_inflate\_enabled](#input\_eventhub\_namespace\_auto\_inflate\_enabled)
 
 Description: Is Auto Inflate enabled for the EventHub Namespace?
@@ -143,7 +137,7 @@ Default: `"Standard"`
 
 ### <a name="input_eventhub_namespace_zone_redundant"></a> [eventhub\_namespace\_zone\_redundant](#input\_eventhub\_namespace\_zone\_redundant)
 
-Description: Specifies if the EventHub Namespace should be Zone Redundant (created across Availability Zones).
+Description: Specifies if the EventHub Namespace should be Zone Redundant (created across Availability Zones). Changing this forces a new resource to be created. Defaults to `true`.
 
 Type: `bool`
 
@@ -181,14 +175,6 @@ object({
 ```
 
 Default: `null`
-
-### <a name="input_eventhub_public_network_access_enabled"></a> [eventhub\_public\_network\_access\_enabled](#input\_eventhub\_public\_network\_access\_enabled)
-
-Description: Is public network access enabled for the EventHub Namespace?
-
-Type: `bool`
-
-Default: `true`
 
 ### <a name="input_location"></a> [location](#input\_location)
 
@@ -328,14 +314,6 @@ Description: n/a
 Type: `map(any)`
 
 Default: `{}`
-
-### <a name="input_zone_redundant"></a> [zone\_redundant](#input\_zone\_redundant)
-
-Description:  Specifies if the EventHub Namespace should be Zone Redundant (created across Availability Zones). Changing this forces a new resource to be created. Defaults to `true`.
-
-Type: `bool`
-
-Default: `true`
 
 ## Outputs
 
