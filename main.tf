@@ -50,6 +50,16 @@ resource "azurerm_eventhub_namespace" "this" {
       }
     }
   }
+
+  tags = var.tags
+
+  lifecycle {
+    precondition {
+      condition     = var.eventhub_namespace_maximum_throughput_units != null && !var.eventhub_namespace_auto_inflate_enabled
+      error_message = "Cannot set MaximumThroughputUnits property if AutoInflate is not enabled."
+    }
+
+  }
 }
 
 # required AVM resources interfaces

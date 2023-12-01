@@ -5,32 +5,36 @@ variable "eventhub_namespace_sku" {
 }
 
 variable "eventhub_namespace_capacity" {
-  description = "Specifies the Capacity / Throughput Units for a Standard SKU namespace."
+  description = <<DESCRIPTION
+Specifies the Capacity / Throughput Units for a Standard SKU namespace.  
+Default capacity has a maximum of 2, but can be increased in blocks of 2 on a committed purchase basis. 
+Defaults to 1.
+DESCRIPTION
   type        = number
   default     = 1
-  # You can add validation rules or constraints based on your specific requirements
-  # For example, validation = can(condition, error_message)
 }
 
 variable "eventhub_namespace_auto_inflate_enabled" {
   description = "Is Auto Inflate enabled for the EventHub Namespace?"
   type        = bool
-  default     = false
+  default     = null
 }
 
 variable "eventhub_namespace_dedicated_cluster_id" {
-  description = "Specifies the ID of the EventHub Dedicated Cluster where this Namespace should be created."
+  description = "Specifies the ID of the EventHub Dedicated Cluster where this Namespace should be created.  Changing this forces a new resource to be created."
   type        = string
   default     = null
-  # You may customize the default value or leave it as null based on your requirements
 }
 
 variable "eventhub_namespace_maximum_throughput_units" {
   description = "Specifies the maximum number of throughput units when Auto Inflate is Enabled. Valid values range from 1 - 20."
   type        = number
-  default     = 1
-  # You can add validation rules or constraints based on your specific requirements
-  # For example, validation = can(condition, error_message)
+  default     = null
+
+  validation {
+    condition     = var.eventhub_namespace_maximum_throughput_units == null ? true : var.eventhub_namespace_maximum_throughput_units < 1 || var.eventhub_namespace_maximum_throughput_units > 20
+    error_message = "Maximum throughput units must be in the range of 1 to 20"
+  }
 }
 
 variable "eventhub_namespace_zone_redundant" {
@@ -85,10 +89,6 @@ Requires Premium SKU.
 
 DESCRIPTION
 }
-
-
-
-
 
 variable "eventhub_namespace_local_authentication_enabled" {
   description = "Is SAS authentication enabled for the EventHub Namespace? Defaults to `false`."

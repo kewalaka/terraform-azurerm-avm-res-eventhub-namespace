@@ -97,11 +97,13 @@ Description: Is Auto Inflate enabled for the EventHub Namespace?
 
 Type: `bool`
 
-Default: `false`
+Default: `null`
 
 ### <a name="input_eventhub_namespace_capacity"></a> [eventhub\_namespace\_capacity](#input\_eventhub\_namespace\_capacity)
 
-Description: Specifies the Capacity / Throughput Units for a Standard SKU namespace.
+Description: Specifies the Capacity / Throughput Units for a Standard SKU namespace.  
+Default capacity has a maximum of 2, but can be increased in blocks of 2 on a committed purchase basis.   
+Defaults to 1.
 
 Type: `number`
 
@@ -109,7 +111,7 @@ Default: `1`
 
 ### <a name="input_eventhub_namespace_dedicated_cluster_id"></a> [eventhub\_namespace\_dedicated\_cluster\_id](#input\_eventhub\_namespace\_dedicated\_cluster\_id)
 
-Description: Specifies the ID of the EventHub Dedicated Cluster where this Namespace should be created.
+Description: Specifies the ID of the EventHub Dedicated Cluster where this Namespace should be created.  Changing this forces a new resource to be created.
 
 Type: `string`
 
@@ -129,7 +131,7 @@ Description: Specifies the maximum number of throughput units when Auto Inflate 
 
 Type: `number`
 
-Default: `1`
+Default: `null`
 
 ### <a name="input_eventhub_namespace_sku"></a> [eventhub\_namespace\_sku](#input\_eventhub\_namespace\_sku)
 

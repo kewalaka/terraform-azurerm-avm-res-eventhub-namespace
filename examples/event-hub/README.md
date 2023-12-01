@@ -19,16 +19,6 @@ provider "azurerm" {
   skip_provider_registration = true
 }
 
-variable "enable_telemetry" {
-  type        = bool
-  default     = true
-  description = <<DESCRIPTION
-This variable controls whether or not telemetry is enabled for the module.
-For more information see https://aka.ms/avm/telemetryinfo.
-If it is set to false, then no telemetry will be collected.
-DESCRIPTION
-}
-
 # This ensures we have unique CAF compliant names for our resources.
 module "naming" {
   source  = "Azure/naming/azurerm"
@@ -38,7 +28,7 @@ module "naming" {
 # This is required for resource modules
 resource "azurerm_resource_group" "this" {
   name     = module.naming.resource_group.name_unique
-  location = "MYLOCATION"
+  location = "AustraliaEast"
 }
 
 locals {
@@ -56,7 +46,7 @@ module "event_hub" {
   source = "../../"
   # source             = "Azure/avm-<res/ptn>-<name>/azurerm"
   # ...
-  enable_telemetry    = var.enable_telemetry
+  enable_telemetry    = false
   name                = module.naming.eventhub_namespace.name_unique
   resource_group_name = azurerm_resource_group.this.name
 
@@ -92,17 +82,7 @@ No required inputs.
 
 ## Optional Inputs
 
-The following input variables are optional (have default values):
-
-### <a name="input_enable_telemetry"></a> [enable\_telemetry](#input\_enable\_telemetry)
-
-Description: This variable controls whether or not telemetry is enabled for the module.  
-For more information see https://aka.ms/avm/telemetryinfo.  
-If it is set to false, then no telemetry will be collected.
-
-Type: `bool`
-
-Default: `true`
+No optional inputs.
 
 ## Outputs
 
