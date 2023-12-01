@@ -3,10 +3,8 @@ locals {
   # See https://azure.github.io/Azure-Verified-Modules/specs/shared/#id-sfr3---category-telemetry---deploymentusage-telemetry
   telem_puid = "UNOFFICIAL" #"46d3xgtf"
 
-  # TODO: change this to the name of the module. See https://azure.github.io/Azure-Verified-Modules/specs/shared/#id-sfr3---category-telemetry---deploymentusage-telemetry
   module_name = "eventhub-namespace"
 
-  # TODO: Change this. Should be either `res` or `ptn`
   module_type = "res"
 
   # This ensures we don't get errors if telemetry is disabled.

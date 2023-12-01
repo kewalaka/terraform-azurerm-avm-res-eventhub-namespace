@@ -57,18 +57,18 @@ variable "eventhub_network_rulesets" {
     default_action = optional(string, "Deny")
     ip_rule = optional(list(object({
       # since the `action` property only permits `Allow`, this is hard-coded.
-      action   = optional(string, "Allow")
-      ip_range = string
+      action  = optional(string, "Allow")
+      ip_mask = string
     })), [])
-    virtual_network = optional(list(object({
+    virtual_network_rule = optional(list(object({
       # since the `action` property only permits `Allow`, this is hard-coded.
-      action    = optional(string, "Allow")
-      subnet_id = string
+      ignore_missing_virtual_network_service_endpoint = optional(bool)
+      subnet_id                                       = string
     })), [])
   })
   default = null
   validation {
-    condition     = var.network_rule_set == null ? true : contains(["Allow", "Deny"], var.network_rule_set.default_action)
+    condition     = var.eventhub_network_rulesets == null ? true : contains(["Allow", "Deny"], var.eventhub_network_rulesets.default_action)
     error_message = "The default_action value must be either `Allow` or `Deny`."
   }
   description = <<DESCRIPTION
@@ -76,11 +76,11 @@ The network rule set configuration for the Container Registry.
 Requires Premium SKU.
 
 - `default_action` - (Optional) The default action when no rule matches. Possible values are `Allow` and `Deny`. Defaults to `Deny`.
-- `ip_rules` - (Optional) A list of IP rules in CIDR format. Defaults to `[]`.
+- `ip_rule` - (Optional) A list of IP rules in CIDR format. Defaults to `[]`.
   - `action` - Only "Allow" is permitted
-  - `ip_range` - The CIDR block from which requests will match the rule.
-- `virtual_network` - (Optional) When using with Service Endpoints, a list of subnet IDs to associate with the Container Registry. Defaults to `[]`.
-  - `action` - Only "Allow" is permitted
+  - `ip_mask` - The CIDR block from which requests will match the rule.
+- `virtual_network_rule` - (Optional) When using with Service Endpoints, a list of subnet IDs to associate with the Container Registry. Defaults to `[]`.
+  - `ignore_missing_virtual_network_service_endpoint` - Are missing virtual network service endpoints ignored?
   - `subnet_id` - The subnet id from which requests will match the rule.
 
 DESCRIPTION
@@ -89,14 +89,21 @@ DESCRIPTION
 
 
 
-variable "eventhub_namespace_local_authentication_enabled" {
 
+variable "eventhub_namespace_local_authentication_enabled" {
+  description = "Is SAS authentication enabled for the EventHub Namespace? Defaults to `false`."
+  type        = bool
+  default     = false
 }
 
 variable "public_network_access_enabled" {
-
+  description = "Is public network access enabled for the EventHub Namespace? Defaults to `false`."
+  type        = bool
+  default     = false
 }
 
 variable "zone_redundant" {
-
+  description = " Specifies if the EventHub Namespace should be Zone Redundant (created across Availability Zones). Changing this forces a new resource to be created. Defaults to `true`."
+  type        = bool
+  default     = true
 }

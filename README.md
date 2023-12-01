@@ -1,20 +1,7 @@
 <!-- BEGIN_TF_DOCS -->
-# terraform-azurerm-avm-template
+# terraform-azurerm-avm-eventhub-namespace
 
-This is a template repo for Terraform Azure Verified Modules.
-
-Things to do:
-
-1. Set up a GitHub repo environment called `test`.
-1. Configure environment protection rule to ensure that approval is required before deploying to this environment.
-1. Create a user-assigned managed identity in your test subscription.
-1. Create a role assignment for the managed identity on your test subscription, use the minimum required role.
-1. Configure federated identity credentials on the user assigned managed identity. Use the GitHub environment.
-1. Create the following environment secrets on the `test` environment:
-   1. AZURE\_CLIENT\_ID
-   1. AZURE\_TENANT\_ID
-   1. AZURE\_SUBSCRIPTION\_ID
-1. Search and update TODOs within the code and remove the TODO comments once complete.
+This is a template repo for Event Hub resource in Azure.
 
 Major version Zero (0.y.z) is for initial development. Anything MAY change at any time. A module SHOULD NOT be considered stable till at least it is major version one (1.0.0) or greater. Changes will always be via new versions being published and no changes will be made to existing published versions. For more details please go to <https://semver.org/>
 
@@ -25,23 +12,22 @@ The following requirements are needed by this module:
 
 - <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) (>= 1.3.0)
 
-- <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) (>= 3.71.0)
-
-- <a name="requirement_random"></a> [random](#requirement\_random) (>= 3.5.0)
+- <a name="requirement_azurerm"></a> [azurerm](#requirement\_azurerm) (>= 3.71.0, < 4.0.0)
 
 ## Providers
 
 The following providers are used by this module:
 
-- <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) (>= 3.71.0)
+- <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) (>= 3.71.0, < 4.0.0)
 
-- <a name="provider_random"></a> [random](#provider\_random) (>= 3.5.0)
+- <a name="provider_random"></a> [random](#provider\_random)
 
 ## Resources
 
 The following resources are used by this module:
 
-- [azurerm_TODO_the_resource_for_this_module.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/TODO_the_resource_for_this_module) (resource)
+- [azurerm_eventhub.example](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/eventhub) (resource)
+- [azurerm_eventhub_namespace.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/eventhub_namespace) (resource)
 - [azurerm_management_lock.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/management_lock) (resource)
 - [azurerm_private_endpoint.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/private_endpoint) (resource)
 - [azurerm_private_endpoint_application_security_group_association.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/private_endpoint_application_security_group_association) (resource)
@@ -81,6 +67,127 @@ Type: `bool`
 
 Default: `true`
 
+### <a name="input_event_hubs"></a> [event\_hubs](#input\_event\_hubs)
+
+Description: Map of Azure Event Hubs configurations
+
+Type:
+
+```hcl
+map(object({
+    partition_count   = number
+    message_retention = number
+    // Add more parameters if needed
+  }))
+```
+
+Default: `{}`
+
+### <a name="input_eventhub_local_authentication_enabled"></a> [eventhub\_local\_authentication\_enabled](#input\_eventhub\_local\_authentication\_enabled)
+
+Description: Is SAS authentication enabled for the EventHub Namespace?
+
+Type: `bool`
+
+Default: `true`
+
+### <a name="input_eventhub_namespace_auto_inflate_enabled"></a> [eventhub\_namespace\_auto\_inflate\_enabled](#input\_eventhub\_namespace\_auto\_inflate\_enabled)
+
+Description: Is Auto Inflate enabled for the EventHub Namespace?
+
+Type: `bool`
+
+Default: `false`
+
+### <a name="input_eventhub_namespace_capacity"></a> [eventhub\_namespace\_capacity](#input\_eventhub\_namespace\_capacity)
+
+Description: Specifies the Capacity / Throughput Units for a Standard SKU namespace.
+
+Type: `number`
+
+Default: `1`
+
+### <a name="input_eventhub_namespace_dedicated_cluster_id"></a> [eventhub\_namespace\_dedicated\_cluster\_id](#input\_eventhub\_namespace\_dedicated\_cluster\_id)
+
+Description: Specifies the ID of the EventHub Dedicated Cluster where this Namespace should be created.
+
+Type: `string`
+
+Default: `null`
+
+### <a name="input_eventhub_namespace_local_authentication_enabled"></a> [eventhub\_namespace\_local\_authentication\_enabled](#input\_eventhub\_namespace\_local\_authentication\_enabled)
+
+Description: Is SAS authentication enabled for the EventHub Namespace? Defaults to `false`.
+
+Type: `bool`
+
+Default: `false`
+
+### <a name="input_eventhub_namespace_maximum_throughput_units"></a> [eventhub\_namespace\_maximum\_throughput\_units](#input\_eventhub\_namespace\_maximum\_throughput\_units)
+
+Description: Specifies the maximum number of throughput units when Auto Inflate is Enabled. Valid values range from 1 - 20.
+
+Type: `number`
+
+Default: `1`
+
+### <a name="input_eventhub_namespace_sku"></a> [eventhub\_namespace\_sku](#input\_eventhub\_namespace\_sku)
+
+Description: Defines which tier to use for the Event Hub Namespace. Valid options are Basic, Standard, and Premium.
+
+Type: `string`
+
+Default: `"Standard"`
+
+### <a name="input_eventhub_namespace_zone_redundant"></a> [eventhub\_namespace\_zone\_redundant](#input\_eventhub\_namespace\_zone\_redundant)
+
+Description: Specifies if the EventHub Namespace should be Zone Redundant (created across Availability Zones).
+
+Type: `bool`
+
+Default: `false`
+
+### <a name="input_eventhub_network_rulesets"></a> [eventhub\_network\_rulesets](#input\_eventhub\_network\_rulesets)
+
+Description: The network rule set configuration for the Container Registry.  
+Requires Premium SKU.
+
+- `default_action` - (Optional) The default action when no rule matches. Possible values are `Allow` and `Deny`. Defaults to `Deny`.
+- `ip_rule` - (Optional) A list of IP rules in CIDR format. Defaults to `[]`.
+  - `action` - Only "Allow" is permitted
+  - `ip_mask` - The CIDR block from which requests will match the rule.
+- `virtual_network_rule` - (Optional) When using with Service Endpoints, a list of subnet IDs to associate with the Container Registry. Defaults to `[]`.
+  - `ignore_missing_virtual_network_service_endpoint` - Are missing virtual network service endpoints ignored?
+  - `subnet_id` - The subnet id from which requests will match the rule.
+
+Type:
+
+```hcl
+object({
+    default_action = optional(string, "Deny")
+    ip_rule = optional(list(object({
+      # since the `action` property only permits `Allow`, this is hard-coded.
+      action  = optional(string, "Allow")
+      ip_mask = string
+    })), [])
+    virtual_network_rule = optional(list(object({
+      # since the `action` property only permits `Allow`, this is hard-coded.
+      ignore_missing_virtual_network_service_endpoint = optional(bool)
+      subnet_id                                       = string
+    })), [])
+  })
+```
+
+Default: `null`
+
+### <a name="input_eventhub_public_network_access_enabled"></a> [eventhub\_public\_network\_access\_enabled](#input\_eventhub\_public\_network\_access\_enabled)
+
+Description: Is public network access enabled for the EventHub Namespace?
+
+Type: `bool`
+
+Default: `true`
+
 ### <a name="input_location"></a> [location](#input\_location)
 
 Description: Azure region where the resource should be deployed.  If null, the location will be inferred from the resource group location.
@@ -99,6 +206,21 @@ Type:
 object({
     name = optional(string, null)
     kind = optional(string, "None")
+  })
+```
+
+Default: `{}`
+
+### <a name="input_managed_identities"></a> [managed\_identities](#input\_managed\_identities)
+
+Description: n/a
+
+Type:
+
+```hcl
+object({
+    system_assigned            = optional(bool, false)
+    user_assigned_resource_ids = optional(set(string), [])
   })
 ```
 
@@ -160,6 +282,14 @@ map(object({
 
 Default: `{}`
 
+### <a name="input_public_network_access_enabled"></a> [public\_network\_access\_enabled](#input\_public\_network\_access\_enabled)
+
+Description: Is public network access enabled for the EventHub Namespace? Defaults to `false`.
+
+Type: `bool`
+
+Default: `false`
+
 ### <a name="input_role_assignments"></a> [role\_assignments](#input\_role\_assignments)
 
 Description: A map of role assignments to create on this resource. The map key is deliberately arbitrary to avoid issues where map keys maybe unknown at plan time.
@@ -188,6 +318,22 @@ map(object({
 ```
 
 Default: `{}`
+
+### <a name="input_tags"></a> [tags](#input\_tags)
+
+Description: n/a
+
+Type: `map(any)`
+
+Default: `{}`
+
+### <a name="input_zone_redundant"></a> [zone\_redundant](#input\_zone\_redundant)
+
+Description:  Specifies if the EventHub Namespace should be Zone Redundant (created across Availability Zones). Changing this forces a new resource to be created. Defaults to `true`.
+
+Type: `bool`
+
+Default: `true`
 
 ## Outputs
 

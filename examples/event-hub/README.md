@@ -16,6 +16,7 @@ terraform {
 
 provider "azurerm" {
   features {}
+  skip_provider_registration = true
 }
 
 variable "enable_telemetry" {
@@ -40,14 +41,26 @@ resource "azurerm_resource_group" "this" {
   location = "MYLOCATION"
 }
 
+locals {
+  event_hubs = {
+    default_event_hub = {
+      partition_count   = 4
+      message_retention = 7
+      // Add more default values if needed
+    }
+    // Add more default event hubs if needed
+  }
+}
 # This is the module call
-module "MYMODULE" {
+module "event_hub" {
   source = "../../"
   # source             = "Azure/avm-<res/ptn>-<name>/azurerm"
   # ...
   enable_telemetry    = var.enable_telemetry
-  name                = "" # TODO update with module.naming.<RESOURCE_TYPE>.name_unique
+  name                = module.naming.eventhub_namespace.name_unique
   resource_group_name = azurerm_resource_group.this.name
+
+  event_hubs = local.event_hubs
 }
 ```
 
@@ -99,7 +112,7 @@ No outputs.
 
 The following Modules are called:
 
-### <a name="module_MYMODULE"></a> [MYMODULE](#module\_MYMODULE)
+### <a name="module_event_hub"></a> [event\_hub](#module\_event\_hub)
 
 Source: ../../
 
