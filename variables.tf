@@ -24,11 +24,8 @@ variable "name" {
   type        = string
   description = "The name of the this resource."
   validation {
-    condition     = can(regex("TODO determine REGEX", var.name))
-    error_message = "The name must be TODO."
-    # e.g.:
-    #condition     = can(regex("^[a-z0-9]{5,50}$", var.name))
-    #error_message = "The name must be between 5 and 50 characters long and can only contain lowercase letters and numbers."
+    condition     = can(regex("[a-zA-Z][a-zA-Z0-9-]{0,48}[a-zA-Z0-9]$", var.name))
+    error_message = "The name must be be between 2 and 50 characters, alphanumeric and hyphens.  The name must start with a letter, and may not start or end with a hyphen."
   }
 }
 
@@ -46,6 +43,14 @@ variable "lock" {
     condition     = contains(["CanNotDelete", "ReadOnly", "None"], var.lock.kind)
     error_message = "The lock level must be one of: 'None', 'CanNotDelete', or 'ReadOnly'."
   }
+}
+
+variable "managed_identities" {
+  type = object({
+    system_assigned            = optional(bool, false)
+    user_assigned_resource_ids = optional(set(string), [])
+  })
+  default = {}
 }
 
 variable "role_assignments" {
@@ -124,3 +129,9 @@ A map of private endpoints to create on this resource. The map key is deliberate
   - `private_ip_address` - The private IP address of the IP configuration.
 DESCRIPTION
 }
+
+variable "tags" {
+  type    = map(any)
+  default = {}
+}
+

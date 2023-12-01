@@ -25,6 +25,16 @@ resource "azurerm_resource_group" "this" {
   location = "AustraliaEast"
 }
 
+locals {
+  event_hubs = {
+    default_event_hub = {
+      partition_count   = 4
+      message_retention = 7
+      // Add more default values if needed
+    }
+    // Add more default event hubs if needed
+  }
+}
 # This is the module call
 module "event_hub" {
   source = "../../"
@@ -33,4 +43,6 @@ module "event_hub" {
   enable_telemetry    = false
   name                = module.naming.eventhub_namespace.name_unique
   resource_group_name = azurerm_resource_group.this.name
+
+  event_hubs = local.event_hubs
 }
