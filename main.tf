@@ -30,9 +30,9 @@ resource "azurerm_eventhub_namespace" "this" {
   dynamic "network_rulesets" {
     for_each = var.eventhub_network_rulesets != null ? { this = var.eventhub_network_rulesets } : {}
     content {
-      default_action                 = network_rule_sets.value.default_action
-      public_network_access_enabled  = network_rule_sets.value.public_network_access_enabled
-      trusted_service_access_enabled = network_rule_sets.value.trusted_service_access_enabled
+      default_action                 = network_rulesets.value.default_action
+      public_network_access_enabled  = network_rulesets.value.public_network_access_enabled
+      trusted_service_access_enabled = network_rulesets.value.trusted_service_access_enabled
 
       dynamic "ip_rule" {
         for_each = network_rulesets.value.ip_rule
