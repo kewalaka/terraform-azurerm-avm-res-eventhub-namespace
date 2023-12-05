@@ -31,7 +31,7 @@ module "naming" {
 # This is required for resource modules
 resource "azurerm_resource_group" "this" {
   name     = module.naming.resource_group.name_unique
-  location = "MYLOCATION"
+  location = "australiaeast"
 }
 
 # This is the module call
@@ -40,7 +40,10 @@ module "MYMODULE" {
   # source             = "Azure/avm-<res/ptn>-<name>/azurerm"
   # ...
   enable_telemetry    = var.enable_telemetry
-  name                = "" # TODO update with module.naming.<RESOURCE_TYPE>.name_unique
+  name                = module.naming.eventhub_namespace.name_unique # TODO Is this the correct <RESOURCE_TYPE>?
   resource_group_name = azurerm_resource_group.this.name
 
+  public_network_access_enabled                   = true
+  zone_redundant                                  = false
+  eventhub_namespace_local_authentication_enabled = true
 }

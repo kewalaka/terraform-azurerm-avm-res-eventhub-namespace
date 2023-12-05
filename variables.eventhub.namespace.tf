@@ -68,7 +68,7 @@ variable "eventhub_network_rulesets" {
   })
   default = null
   validation {
-    condition     = var.network_rule_set == null ? true : contains(["Allow", "Deny"], var.network_rule_set.default_action)
+    condition     = var.eventhub_network_rulesets == null ? true : contains(["Allow", "Deny"], var.eventhub_network_rulesets.default_action)
     error_message = "The default_action value must be either `Allow` or `Deny`."
   }
   description = <<DESCRIPTION
