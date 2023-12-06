@@ -89,9 +89,3 @@ Requires Premium SKU.
 
 DESCRIPTION
 }
-
-variable "public_network_access_enabled" {
-  description = "Is public network access enabled for the EventHub Namespace? Defaults to `false`."
-  type        = bool
-  default     = false
-}
