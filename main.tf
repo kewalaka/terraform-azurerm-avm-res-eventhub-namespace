@@ -41,6 +41,7 @@ resource "azurerm_eventhub_namespace" "this" {
           ip_mask = ip_rule.value.ip_mask
         }
       }
+
       dynamic "virtual_network_rule" {
         for_each = network_rulesets.value.virtual_network_rule
         content {
