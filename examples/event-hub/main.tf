@@ -58,7 +58,7 @@ resource "azurerm_storage_container" "this" {
 
 resource "azurerm_role_assignment" "this" {
   principal_id         = "909224f2-bae6-48bd-9de7-52135d812691"
-  scope                = azurerm_storage_container.this.id
+  scope                = azurerm_storage_account.this.id
   role_definition_name = "Storage Blob Data Contributor"
 }
 
