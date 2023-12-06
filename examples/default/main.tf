@@ -34,8 +34,7 @@ resource "azurerm_resource_group" "this" {
   location = "australiaeast"
 }
 
-# This is the module call
-module "MYMODULE" {
+module "event-hub" {
   source = "../../"
   # source             = "Azure/avm-<res/ptn>-<name>/azurerm"
   # ...
@@ -43,7 +42,7 @@ module "MYMODULE" {
   name                = module.naming.eventhub_namespace.name_unique # TODO Is this the correct <RESOURCE_TYPE>?
   resource_group_name = azurerm_resource_group.this.name
 
-  public_network_access_enabled                   = true
-  zone_redundant                                  = false
-  eventhub_namespace_local_authentication_enabled = true
+  eventhub_namespace_public_network_access_enabled = true
+  eventhub_namespace_zone_redundant                = false
+  eventhub_namespace_local_authentication_enabled  = true
 }

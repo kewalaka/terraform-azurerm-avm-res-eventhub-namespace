@@ -31,24 +31,60 @@ module "naming" {
 # This is required for resource modules
 resource "azurerm_resource_group" "this" {
   name     = module.naming.resource_group.name_unique
-  location = "MYLOCATION"
+  location = "australiaeast"
 }
 
-# This is the module call
-module "MYMODULE" {
+
+resource "azurerm_storage_account" "this" {
+  name                     = module.naming.storage_account.name_unique
+  resource_group_name      = azurerm_resource_group.this.name
+  location                 = azurerm_resource_group.this.location
+  account_tier             = "Standard"
+  account_replication_type = "LRS"
+}
+
+resource "azurerm_storage_container" "this" {
+  name                  = "eventhub-capture"
+  storage_account_name  = azurerm_storage_account.this.name
+  container_access_type = "private"
+}
+
+locals {
+  event_hubs = {
+    my_event_hub = {
+      name                = module.naming.eventhub.name_unique
+      namespace_name      = module.event-hub.resource.id
+      partition_count     = 4
+      message_retention   = 7
+      resource_group_name = module.event-hub.resource.name
+      status              = "Active"
+
+      capture_description = {
+        enabled             = true
+        encoding            = "Avro"
+        interval_in_seconds = 300
+        size_limit_in_bytes = 314572800
+        skip_empty_archives = false
+
+        destination = {
+          name                = "EventHubArchive.AzureBlockBlob"
+          archive_name_format = "{Namespace}/{EventHub}/{PartitionId}/{Year}/{Month}/{Day}/{Hour}/{Minute}/{Second}"
+          blob_container_name = azurerm_storage_container.this.name
+          storage_account_id  = azurerm_storage_account.this.id
+        }
+        // Add more default event hubs if needed
+      }
+    }
+  }
+}
+
+module "event-hub" {
   source = "../../"
   # source             = "Azure/avm-<res/ptn>-<name>/azurerm"
   # ...
   enable_telemetry    = var.enable_telemetry
-  name                = "" # TODO update with module.naming.<RESOURCE_TYPE>.name_unique
+  name                = module.naming.eventhub_namespace.name_unique
   resource_group_name = azurerm_resource_group.this.name
 
-  event_hubs = {
-    default_event_hub = {
-      partition_count   = 4
-      message_retention = 7
-      // Add more default values if needed
-    }
-    // Add more default event hubs if needed
-  }
+  event_hubs = local.event_hubs
 }

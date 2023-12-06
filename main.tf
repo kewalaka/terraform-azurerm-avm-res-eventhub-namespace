@@ -14,9 +14,9 @@ resource "azurerm_eventhub_namespace" "this" {
   local_authentication_enabled  = var.eventhub_namespace_local_authentication_enabled
   maximum_throughput_units      = var.eventhub_namespace_maximum_throughput_units
   minimum_tls_version           = 1.2
-  public_network_access_enabled = var.public_network_access_enabled
+  public_network_access_enabled = var.eventhub_namespace_public_network_access_enabled
 
-  zone_redundant = var.zone_redundant
+  zone_redundant = var.eventhub_namespace_zone_redundant
 
   dynamic "identity" {
     for_each = var.managed_identities != null ? { this = var.managed_identities } : {}
