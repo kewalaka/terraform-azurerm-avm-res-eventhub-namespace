@@ -49,6 +49,18 @@ resource "azurerm_storage_container" "this" {
   container_access_type = "private"
 }
 
+data "azurerm_client_config" "current" {}
+
+data "azuread_service_principal" "logged_in_app" {
+  client_id = data.azurerm_client_config.current.client_id
+}
+
+resource "azurerm_role_assignment" "this" {
+  principal_id         = data.azuread_service_principal.logged_in_app.object_id
+  scope                = azurerm_storage_container.this.id
+  role_definition_name = "Storage Blob Data Contributor"
+}
+
 locals {
   event_hubs = {
     my_event_hub = {
@@ -87,4 +99,8 @@ module "event-hub" {
   resource_group_name = azurerm_resource_group.this.name
 
   event_hubs = local.event_hubs
+
+  depends_on = [
+    azurerm_role_assignment.this
+  ]
 }
