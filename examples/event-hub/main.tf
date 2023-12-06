@@ -49,14 +49,15 @@ resource "azurerm_storage_container" "this" {
   container_access_type = "private"
 }
 
-data "azurerm_client_config" "current" {}
+# TODO we'd like to do this if only we had permission.
+# data "azurerm_client_config" "current" {}
 
-data "azuread_service_principal" "logged_in_app" {
-  client_id = data.azurerm_client_config.current.client_id
-}
+# data "azuread_service_principal" "logged_in_app" {
+#   client_id = data.azurerm_client_config.current.client_id
+# }
 
 resource "azurerm_role_assignment" "this" {
-  principal_id         = data.azuread_service_principal.logged_in_app.object_id
+  principal_id         = "909224f2-bae6-48bd-9de7-52135d812691"
   scope                = azurerm_storage_container.this.id
   role_definition_name = "Storage Blob Data Contributor"
 }
