@@ -25,12 +25,15 @@ resource "azurerm_resource_group" "this" {
   location = "AustraliaEast"
 }
 
-# This is the module call
-module "event_hub" {
+module "event-hub" {
   source = "../../"
   # source             = "Azure/avm-<res/ptn>-<name>/azurerm"
   # ...
   enable_telemetry    = false
   name                = module.naming.eventhub_namespace.name_unique
   resource_group_name = azurerm_resource_group.this.name
+
+  eventhub_namespace_public_network_access_enabled = true
+  eventhub_namespace_zone_redundant                = false
+  eventhub_namespace_local_authentication_enabled  = true
 }

@@ -43,6 +43,19 @@ variable "eventhub_namespace_zone_redundant" {
   default     = false
 }
 
+variable "eventhub_namespace_local_authentication_enabled" {
+  description = "Is SAS authentication enabled for the EventHub Namespace?"
+  type        = bool
+  default     = true
+}
+
+variable "eventhub_namespace_public_network_access_enabled" {
+  description = "Is public network access enabled for the EventHub Namespace?"
+  type        = bool
+  default     = true
+}
+
+
 variable "eventhub_network_rulesets" {
   type = object({
     default_action = optional(string, "Deny")
