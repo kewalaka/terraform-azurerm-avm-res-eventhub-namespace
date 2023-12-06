@@ -14,7 +14,7 @@ resource "azurerm_eventhub_namespace" "this" {
   local_authentication_enabled  = var.eventhub_namespace_local_authentication_enabled
   maximum_throughput_units      = var.eventhub_namespace_maximum_throughput_units
   minimum_tls_version           = 1.2
-  public_network_access_enabled = var.public_network_access_enabled
+  public_network_access_enabled = var.eventhub_namespace_public_network_access_enabled
 
   zone_redundant = var.eventhub_namespace_zone_redundant
 
@@ -30,9 +30,9 @@ resource "azurerm_eventhub_namespace" "this" {
   dynamic "network_rulesets" {
     for_each = var.eventhub_network_rulesets != null ? { this = var.eventhub_network_rulesets } : {}
     content {
-      default_action                 = network_rule_sets.value.default_action
-      public_network_access_enabled  = network_rule_sets.value.public_network_access_enabled
-      trusted_service_access_enabled = network_rule_sets.value.trusted_service_access_enabled
+      default_action                 = network_rulesets.value.default_action
+      public_network_access_enabled  = network_rulesets.value.public_network_access_enabled
+      trusted_service_access_enabled = network_rulesets.value.trusted_service_access_enabled
 
       dynamic "ip_rule" {
         for_each = network_rulesets.value.ip_rule
@@ -41,6 +41,7 @@ resource "azurerm_eventhub_namespace" "this" {
           ip_mask = ip_rule.value.ip_mask
         }
       }
+
       dynamic "virtual_network_rule" {
         for_each = network_rulesets.value.virtual_network_rule
         content {
@@ -58,7 +59,6 @@ resource "azurerm_eventhub_namespace" "this" {
       condition     = var.eventhub_namespace_maximum_throughput_units == null && !var.eventhub_namespace_auto_inflate_enabled
       error_message = "Cannot set MaximumThroughputUnits property if AutoInflate is not enabled."
     }
-
   }
 }
 

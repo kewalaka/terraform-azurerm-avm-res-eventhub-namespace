@@ -77,8 +77,25 @@ Type:
 
 ```hcl
 map(object({
-    partition_count   = number
-    message_retention = number
+    name                = string
+    namespace_name      = string
+    resource_group_name = string
+    partition_count     = number
+    message_retention   = number
+    capture_description = object({
+      enabled             = bool
+      encoding            = string
+      interval_in_seconds = optional(number)
+      size_limit_in_bytes = optional(number)
+      skip_empty_archives = optional(bool)
+      destination = object({
+        name                = string
+        archive_name_format = string
+        blob_container_name = string
+        storage_account_id  = string
+      })
+    })
+    status = string
     // Add more parameters if needed
   }))
 ```
@@ -113,11 +130,11 @@ Default: `null`
 
 ### <a name="input_eventhub_namespace_local_authentication_enabled"></a> [eventhub\_namespace\_local\_authentication\_enabled](#input\_eventhub\_namespace\_local\_authentication\_enabled)
 
-Description: Is SAS authentication enabled for the EventHub Namespace? Defaults to `false`.
+Description: Is SAS authentication enabled for the EventHub Namespace?
 
 Type: `bool`
 
-Default: `false`
+Default: `true`
 
 ### <a name="input_eventhub_namespace_maximum_throughput_units"></a> [eventhub\_namespace\_maximum\_throughput\_units](#input\_eventhub\_namespace\_maximum\_throughput\_units)
 
@@ -126,6 +143,14 @@ Description: Specifies the maximum number of throughput units when Auto Inflate 
 Type: `number`
 
 Default: `null`
+
+### <a name="input_eventhub_namespace_public_network_access_enabled"></a> [eventhub\_namespace\_public\_network\_access\_enabled](#input\_eventhub\_namespace\_public\_network\_access\_enabled)
+
+Description: Is public network access enabled for the EventHub Namespace?
+
+Type: `bool`
+
+Default: `true`
 
 ### <a name="input_eventhub_namespace_sku"></a> [eventhub\_namespace\_sku](#input\_eventhub\_namespace\_sku)
 
@@ -269,14 +294,6 @@ map(object({
 ```
 
 Default: `{}`
-
-### <a name="input_public_network_access_enabled"></a> [public\_network\_access\_enabled](#input\_public\_network\_access\_enabled)
-
-Description: Is public network access enabled for the EventHub Namespace? Defaults to `false`.
-
-Type: `bool`
-
-Default: `false`
 
 ### <a name="input_role_assignments"></a> [role\_assignments](#input\_role\_assignments)
 
