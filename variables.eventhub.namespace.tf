@@ -90,12 +90,6 @@ Requires Premium SKU.
 DESCRIPTION
 }
 
-variable "eventhub_namespace_local_authentication_enabled" {
-  description = "Is SAS authentication enabled for the EventHub Namespace? Defaults to `false`."
-  type        = bool
-  default     = false
-}
-
 variable "public_network_access_enabled" {
   description = "Is public network access enabled for the EventHub Namespace? Defaults to `false`."
   type        = bool

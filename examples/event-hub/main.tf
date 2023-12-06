@@ -10,7 +10,16 @@ terraform {
 
 provider "azurerm" {
   features {}
-  skip_provider_registration = true
+}
+
+variable "enable_telemetry" {
+  type        = bool
+  default     = true
+  description = <<DESCRIPTION
+This variable controls whether or not telemetry is enabled for the module.
+For more information see https://aka.ms/avm/telemetryinfo.
+If it is set to false, then no telemetry will be collected.
+DESCRIPTION
 }
 
 # This ensures we have unique CAF compliant names for our resources.
@@ -74,17 +83,6 @@ module "event-hub" {
   # source             = "Azure/avm-<res/ptn>-<name>/azurerm"
   # ...
   enable_telemetry    = var.enable_telemetry
-  name                = module.naming.eventhub_namespace.name_unique
-  resource_group_name = azurerm_resource_group.this.name
-
-  event_hubs = local.event_hubs
-}
-# This is the module call
-module "event_hub" {
-  source = "../../"
-  # source             = "Azure/avm-<res/ptn>-<name>/azurerm"
-  # ...
-  enable_telemetry    = false
   name                = module.naming.eventhub_namespace.name_unique
   resource_group_name = azurerm_resource_group.this.name
 
