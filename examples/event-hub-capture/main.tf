@@ -55,7 +55,6 @@ resource "azurerm_role_assignment" "this" {
   role_definition_name = "Storage Blob Data Contributor"
 }
 
-
 locals {
   event_hubs = {
     event_hub_capture = {
