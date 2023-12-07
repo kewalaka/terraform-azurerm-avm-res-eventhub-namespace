@@ -85,6 +85,7 @@ locals {
     // Add more default event hubs if needed
   }
 }
+
 # This is the module call
 module "event-hub" {
   source = "../../"
