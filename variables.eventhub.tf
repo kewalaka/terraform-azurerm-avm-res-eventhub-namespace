@@ -6,7 +6,7 @@ variable "event_hubs" {
     resource_group_name = string
     partition_count     = number
     message_retention   = number
-    capture_description = object({
+    capture_description = optional(object({
       enabled             = bool
       encoding            = string
       interval_in_seconds = optional(number)
@@ -18,8 +18,8 @@ variable "event_hubs" {
         blob_container_name = string
         storage_account_id  = string
       })
-    })
-    status = string
+    }))
+    status = optional(string)
     // Add more parameters if needed
   }))
   default = {}

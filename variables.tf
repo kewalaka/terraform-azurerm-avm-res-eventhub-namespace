@@ -45,6 +45,14 @@ variable "lock" {
   }
 }
 
+variable "existing_parent_resource" {
+  description = "If supplied, this event hub namespace resource will be used by child resources (e.g. event hubs), instead of creating a new event hub namespace."
+  type = object({
+    name = string
+  })
+  default = null
+}
+
 variable "managed_identities" {
   type = object({
     system_assigned            = optional(bool, false)
