@@ -8,7 +8,6 @@ resource "azurerm_eventhub" "example" {
   message_retention   = each.value.message_retention
   status              = each.value.status
 
-
   dynamic "capture_description" {
     for_each = each.value.capture_description != null ? { this = each.value.capture_description } : {}
     content {
