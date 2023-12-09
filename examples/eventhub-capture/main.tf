@@ -35,12 +35,8 @@ resource "azurerm_resource_group" "this" {
   location = "australiaeast"
 }
 
-# Get the current client details & the client id of the principal running terraform, used to apply RBAC permissions
+# Get the current client details of the principal running terraform, used to apply RBAC permissions
 data "azurerm_client_config" "this" {}
-
-data "azuread_service_principal" "this" {
-  client_id = data.azurerm_client_config.this.client_id
-}
 
 resource "azurerm_storage_account" "this" {
   name                     = module.naming.storage_account.name_unique
@@ -57,7 +53,7 @@ resource "azurerm_storage_container" "this" {
 }
 
 resource "azurerm_role_assignment" "this" {
-  principal_id         = data.azuread_service_principal.this.object_id
+  principal_id         = data.azurerm_client_config.this.object_id
   scope                = azurerm_storage_container.this.resource_manager_id
   role_definition_name = "Storage Blob Data Contributor"
 }
