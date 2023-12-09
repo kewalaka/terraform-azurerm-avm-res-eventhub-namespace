@@ -59,7 +59,6 @@ variable "eventhub_namespace_public_network_access_enabled" {
   default     = false
 }
 
-
 variable "eventhub_network_rulesets" {
   type = object({
     default_action = optional(string, "Deny")
