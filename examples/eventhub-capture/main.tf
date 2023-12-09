@@ -35,6 +35,13 @@ resource "azurerm_resource_group" "this" {
   location = "australiaeast"
 }
 
+# Get the current client details & the client id of the principal running terraform, used to apply RBAC permissions
+data "azurerm_client_config" "this" {}
+
+data "azuread_service_principal" "this" {
+  client_id = data.azurerm_client_config.this.client_id
+}
+
 resource "azurerm_storage_account" "this" {
   name                     = module.naming.storage_account.name_unique
   resource_group_name      = azurerm_resource_group.this.name
@@ -44,20 +51,20 @@ resource "azurerm_storage_account" "this" {
 }
 
 resource "azurerm_storage_container" "this" {
-  name                  = "example-eventhub-capture"
+  name                  = "capture"
   storage_account_name  = azurerm_storage_account.this.name
   container_access_type = "private"
 }
 
 resource "azurerm_role_assignment" "this" {
-  principal_id         = "909224f2-bae6-48bd-9de7-52135d812691"
-  scope                = azurerm_storage_account.this.id
+  principal_id         = data.azuread_service_principal.this.object_id
+  scope                = azurerm_storage_container.this.resource_manager_id
   role_definition_name = "Storage Blob Data Contributor"
 }
 
 locals {
   event_hubs = {
-    event_hub_capture = {
+    eh_capture_example = {
       name                = module.naming.eventhub.name_unique
       namespace_name      = module.event-hub.resource.id
       partition_count     = 4
@@ -78,14 +85,12 @@ locals {
           blob_container_name = azurerm_storage_container.this.name
           storage_account_id  = azurerm_storage_account.this.id
         }
-        // Add more default event hubs if needed
       }
     }
-    // Add more default event hubs if needed
+    // Add more event hubs if needed
   }
 }
 
-# This is the module call
 module "event-hub" {
   source = "../../"
   # source             = "Azure/avm-<res/ptn>-<name>/azurerm"

@@ -41,11 +41,10 @@ locals {
       message_retention   = 7
       resource_group_name = module.event-hub.resource.name
     }
-    // Add more default event hubs if needed
+    // Add more event hubs if needed
   }
 }
 
-# This is the module call
 module "event-hub" {
   source = "../../"
   # source             = "Azure/avm-<res/ptn>-<name>/azurerm"

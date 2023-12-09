@@ -1,7 +1,7 @@
 <!-- BEGIN_TF_DOCS -->
 # Default example
 
-This deploys the module in its simplest form.
+This deploys an event hub into an existing event hub namespace.
 
 ```hcl
 terraform {
@@ -16,16 +16,7 @@ terraform {
 
 provider "azurerm" {
   features {}
-}
-
-variable "enable_telemetry" {
-  type        = bool
-  default     = true
-  description = <<DESCRIPTION
-This variable controls whether or not telemetry is enabled for the module.
-For more information see https://aka.ms/avm/telemetryinfo.
-If it is set to false, then no telemetry will be collected.
-DESCRIPTION
+  skip_provider_registration = true
 }
 
 # This ensures we have unique CAF compliant names for our resources.
@@ -40,15 +31,23 @@ resource "azurerm_resource_group" "this" {
   location = "australiaeast"
 }
 
+resource "azurerm_eventhub_namespace" "this" {
+  name                = module.naming.eventhub.name_unique
+  location            = azurerm_resource_group.this.location
+  resource_group_name = azurerm_resource_group.this.name
+  sku                 = "Standard"
+}
+
 locals {
   event_hubs = {
-    my_event_hub = {
+    event_hub_existing_namespace = {
       name                = module.naming.eventhub.name_unique
       namespace_name      = module.event-hub.resource.id
-      partition_count     = 1
+      partition_count     = 4
       message_retention   = 7
       resource_group_name = module.event-hub.resource.name
     }
+    // Add more event hubs if needed
   }
 }
 
@@ -56,9 +55,10 @@ module "event-hub" {
   source = "../../"
   # source             = "Azure/avm-<res/ptn>-<name>/azurerm"
   # ...
-  enable_telemetry    = var.enable_telemetry
-  name                = module.naming.eventhub_namespace.name_unique
-  resource_group_name = azurerm_resource_group.this.name
+  enable_telemetry         = false
+  existing_parent_resource = { name = azurerm_resource_group.this.name }
+  name                     = module.naming.eventhub_namespace.name_unique
+  resource_group_name      = azurerm_resource_group.this.name
 
   event_hubs = local.event_hubs
 }
@@ -83,6 +83,7 @@ The following providers are used by this module:
 
 The following resources are used by this module:
 
+- [azurerm_eventhub_namespace.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/eventhub_namespace) (resource)
 - [azurerm_resource_group.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/resource_group) (resource)
 
 <!-- markdownlint-disable MD013 -->
@@ -92,17 +93,7 @@ No required inputs.
 
 ## Optional Inputs
 
-The following input variables are optional (have default values):
-
-### <a name="input_enable_telemetry"></a> [enable\_telemetry](#input\_enable\_telemetry)
-
-Description: This variable controls whether or not telemetry is enabled for the module.  
-For more information see https://aka.ms/avm/telemetryinfo.  
-If it is set to false, then no telemetry will be collected.
-
-Type: `bool`
-
-Default: `true`
+No optional inputs.
 
 ## Outputs
 
