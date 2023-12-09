@@ -2,6 +2,10 @@ variable "eventhub_namespace_sku" {
   description = "Defines which tier to use for the Event Hub Namespace. Valid options are Basic, Standard, and Premium."
   type        = string
   default     = "Standard" # You can set a default value or leave it blank depending on your requirements
+  validation {
+    condition     = contains(["Basic", "Standard", "Premium"], var.eventhub_namespace_sku)
+    error_message = "The default_action value must be either `Basic`, `Standard`, or `Premium`."
+  }
 }
 
 variable "eventhub_namespace_capacity" {
@@ -40,19 +44,19 @@ variable "eventhub_namespace_maximum_throughput_units" {
 variable "eventhub_namespace_zone_redundant" {
   description = "Specifies if the EventHub Namespace should be Zone Redundant (created across Availability Zones). Changing this forces a new resource to be created. Defaults to `true`."
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "eventhub_namespace_local_authentication_enabled" {
-  description = "Is SAS authentication enabled for the EventHub Namespace?"
+  description = "Is SAS authentication enabled for the EventHub Namespace?.  Defaults to `false`."
   type        = bool
-  default     = true
+  default     = false
 }
 
 variable "eventhub_namespace_public_network_access_enabled" {
-  description = "Is public network access enabled for the EventHub Namespace?"
+  description = "Is public network access enabled for the EventHub Namespace?  Defaults to `false`."
   type        = bool
-  default     = true
+  default     = false
 }
 
 
