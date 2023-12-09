@@ -1,4 +1,4 @@
-resource "azurerm_eventhub" "example" {
+resource "azurerm_eventhub" "this" {
   for_each = var.event_hubs
 
   name                = each.key
