@@ -50,7 +50,7 @@ module "event-hub" {
   # source             = "Azure/avm-<res/ptn>-<name>/azurerm"
   # ...
   enable_telemetry         = false
-  existing_parent_resource = { name = azurerm_resource_group.this.name }
+  existing_parent_resource = { name = azurerm_eventhub_namespace.this.name }
   name                     = module.naming.eventhub_namespace.name_unique
   resource_group_name      = azurerm_resource_group.this.name
 
