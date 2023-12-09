@@ -9,7 +9,7 @@ resource "azurerm_private_endpoint" "this" {
 
   private_service_connection {
     name                           = each.value.private_service_connection_name != null ? each.value.private_service_connection_name : "pse-${var.name}"
-    private_connection_resource_id = azurerm_eventhub_namespace.this.id
+    private_connection_resource_id = azurerm_eventhub_namespace.this[0].id
     is_manual_connection           = false
     subresource_names              = ["namespace"]
   }

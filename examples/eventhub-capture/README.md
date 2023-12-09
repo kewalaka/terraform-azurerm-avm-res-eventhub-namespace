@@ -41,12 +41,8 @@ resource "azurerm_resource_group" "this" {
   location = "australiaeast"
 }
 
-# Get the current client details & the client id of the principal running terraform, used to apply RBAC permissions
+# Get the current client details of the principal running terraform, used to apply RBAC permissions
 data "azurerm_client_config" "this" {}
-
-data "azuread_service_principal" "this" {
-  client_id = data.azurerm_client_config.this.client_id
-}
 
 resource "azurerm_storage_account" "this" {
   name                     = module.naming.storage_account.name_unique
@@ -63,7 +59,7 @@ resource "azurerm_storage_container" "this" {
 }
 
 resource "azurerm_role_assignment" "this" {
-  principal_id         = data.azuread_service_principal.this.object_id
+  principal_id         = data.azurerm_client_config.this.object_id
   scope                = azurerm_storage_container.this.resource_manager_id
   role_definition_name = "Storage Blob Data Contributor"
 }
@@ -126,8 +122,6 @@ The following requirements are needed by this module:
 
 The following providers are used by this module:
 
-- <a name="provider_azuread"></a> [azuread](#provider\_azuread)
-
 - <a name="provider_azurerm"></a> [azurerm](#provider\_azurerm) (>= 3.7.0, < 4.0.0)
 
 ## Resources
@@ -138,7 +132,6 @@ The following resources are used by this module:
 - [azurerm_role_assignment.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_assignment) (resource)
 - [azurerm_storage_account.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_account) (resource)
 - [azurerm_storage_container.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/storage_container) (resource)
-- [azuread_service_principal.this](https://registry.terraform.io/providers/hashicorp/azuread/latest/docs/data-sources/service_principal) (data source)
 - [azurerm_client_config.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/client_config) (data source)
 
 <!-- markdownlint-disable MD013 -->

@@ -37,8 +37,8 @@ locals {
     event_hub_existing_namespace = {
       name                = module.naming.eventhub.name_unique
       namespace_name      = module.event-hub.resource.id
-      partition_count     = 4
-      message_retention   = 7
+      partition_count     = 2
+      message_retention   = 3
       resource_group_name = module.event-hub.resource.name
     }
     // Add more event hubs if needed
