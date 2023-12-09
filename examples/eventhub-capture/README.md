@@ -67,7 +67,6 @@ resource "azurerm_role_assignment" "this" {
 locals {
   event_hubs = {
     eh_capture_example = {
-      name                = module.naming.eventhub.name_unique
       namespace_name      = module.event-hub.resource.id
       partition_count     = 1
       message_retention   = 7
