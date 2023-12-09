@@ -79,14 +79,14 @@ variable "eventhub_network_rulesets" {
     error_message = "The default_action value must be either `Allow` or `Deny`."
   }
   description = <<DESCRIPTION
-The network rule set configuration for the Container Registry.
+The network rule set configuration for the resource.
 Requires Premium SKU.
 
 - `default_action` - (Optional) The default action when no rule matches. Possible values are `Allow` and `Deny`. Defaults to `Deny`.
 - `ip_rule` - (Optional) A list of IP rules in CIDR format. Defaults to `[]`.
   - `action` - Only "Allow" is permitted
   - `ip_mask` - The CIDR block from which requests will match the rule.
-- `virtual_network_rule` - (Optional) When using with Service Endpoints, a list of subnet IDs to associate with the Container Registry. Defaults to `[]`.
+- `virtual_network_rule` - (Optional) When using with Service Endpoints, a list of subnet IDs to associate with the resource. Defaults to `[]`.
   - `ignore_missing_virtual_network_service_endpoint` - Are missing virtual network service endpoints ignored?
   - `subnet_id` - The subnet id from which requests will match the rule.
 
