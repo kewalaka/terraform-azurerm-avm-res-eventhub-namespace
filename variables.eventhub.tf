@@ -25,7 +25,7 @@ variable "event_hubs" {
   validation {
     condition = can([
       for event_hub, config in var.event_hubs : (
-        config.capture_description != null && contains(["Avro", "AvroDeflate"], config.capture_description.encoding)
+        config.capture_description == null ? true : contains(["Avro", "AvroDeflate"], config.capture_description.encoding)
       )
     ])
     error_message = "Invalid encoding value for Event Hub capture encoding. Allowed values are Avro and AvroDeflate."
