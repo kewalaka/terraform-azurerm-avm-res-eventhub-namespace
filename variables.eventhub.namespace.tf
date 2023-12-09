@@ -10,8 +10,8 @@ variable "eventhub_namespace_sku" {
 
 variable "eventhub_namespace_capacity" {
   description = <<DESCRIPTION
-Specifies the Capacity / Throughput Units for a Standard SKU namespace.  
-Default capacity has a maximum of 2, but can be increased in blocks of 2 on a committed purchase basis. 
+Specifies the Capacity / Throughput Units for a Standard SKU namespace.
+Default capacity has a maximum of 2, but can be increased in blocks of 2 on a committed purchase basis.
 Defaults to 1.
 DESCRIPTION
   type        = number

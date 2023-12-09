@@ -3,7 +3,8 @@
 
 This is a template repo for Event Hub resource in Azure.
 
-Major version Zero (0.y.z) is for initial development. Anything MAY change at any time. A module SHOULD NOT be considered stable till at least it is major version one (1.0.0) or greater. Changes will always be via new versions being published and no changes will be made to existing published versions. For more details please go to <https://semver.org/>
+> [!WARNING]
+> Major version Zero (0.y.z) is for initial development. Anything MAY change at any time. A module SHOULD NOT be considered stable till at least it is major version one (1.0.0) or greater. Changes will always be via new versions being published and no changes will be made to existing published versions. For more details please go to <https://semver.org/>
 
 <!-- markdownlint-disable MD033 -->
 ## Requirements
@@ -63,7 +64,7 @@ The following input variables are optional (have default values):
 ### <a name="input_enable_telemetry"></a> [enable\_telemetry](#input\_enable\_telemetry)
 
 Description: This variable controls whether or not telemetry is enabled for the module.  
-For more information see https://aka.ms/avm/telemetryinfo.  
+For more information see <https://aka.ms/avm/telemetryinfo>.  
 If it is set to false, then no telemetry will be collected.
 
 Type: `bool`
@@ -134,7 +135,7 @@ Default: `false`
 ### <a name="input_eventhub_namespace_capacity"></a> [eventhub\_namespace\_capacity](#input\_eventhub\_namespace\_capacity)
 
 Description: Specifies the Capacity / Throughput Units for a Standard SKU namespace.  
-Default capacity has a maximum of 2, but can be increased in blocks of 2 on a committed purchase basis.   
+Default capacity has a maximum of 2, but can be increased in blocks of 2 on a committed purchase basis.  
 Defaults to 1.
 
 Type: `number`
