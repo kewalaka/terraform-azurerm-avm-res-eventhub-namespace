@@ -19,6 +19,15 @@ variable "event_hubs" {
       })
     }))
     status = optional(string)
+    role_assignments = optional(map(object({
+      role_definition_id_or_name             = string
+      principal_id                           = string
+      description                            = optional(string, null)
+      skip_service_principal_aad_check       = optional(bool, false)
+      condition                              = optional(string, null)
+      condition_version                      = optional(string, null)
+      delegated_managed_identity_resource_id = optional(string, null)
+    })), {})
   }))
   default = {}
 
@@ -90,5 +99,6 @@ Map of Azure Event Hubs configurations.
     - `blob_container_name` - (Required) The name of the Container within the Blob Storage Account where messages should be archived.
     - `storage_account_id` - (Required) The ID of the Blob Storage Account where messages should be archived.
 - `status` - (Optional) Specifies the status of the Event Hub resource. Possible values are Active, Disabled, and SendDisabled. Defaults to Active.
+- `role_assignments` - (Optional) RBAC permissions applied to the event hub resource.
 DESCRIPTION 
 }
