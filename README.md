@@ -28,7 +28,7 @@ The following providers are used by this module:
 
 The following resources are used by this module:
 
-- [azurerm_eventhub.example](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/eventhub) (resource)
+- [azurerm_eventhub.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/eventhub) (resource)
 - [azurerm_eventhub_namespace.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/eventhub_namespace) (resource)
 - [azurerm_management_lock.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/management_lock) (resource)
 - [azurerm_private_endpoint.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/private_endpoint) (resource)
@@ -36,6 +36,7 @@ The following resources are used by this module:
 - [azurerm_resource_group_template_deployment.telemetry](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/resource_group_template_deployment) (resource)
 - [azurerm_role_assignment.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/resources/role_assignment) (resource)
 - [random_id.telem](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/id) (resource)
+- [azurerm_eventhub_namespace.this](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/eventhub_namespace) (data source)
 - [azurerm_resource_group.parent](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/resource_group) (data source)
 
 <!-- markdownlint-disable MD013 -->
@@ -82,7 +83,7 @@ map(object({
     resource_group_name = string
     partition_count     = number
     message_retention   = number
-    capture_description = object({
+    capture_description = optional(object({
       enabled             = bool
       encoding            = string
       interval_in_seconds = optional(number)
@@ -94,8 +95,8 @@ map(object({
         blob_container_name = string
         storage_account_id  = string
       })
-    })
-    status = string
+    }))
+    status = optional(string)
     // Add more parameters if needed
   }))
 ```
@@ -196,6 +197,20 @@ object({
       ignore_missing_virtual_network_service_endpoint = optional(bool)
       subnet_id                                       = string
     })), [])
+  })
+```
+
+Default: `null`
+
+### <a name="input_existing_parent_resource"></a> [existing\_parent\_resource](#input\_existing\_parent\_resource)
+
+Description: If supplied, this event hub namespace resource will be used by child resources (e.g. event hubs), instead of creating a new event hub namespace.
+
+Type:
+
+```hcl
+object({
+    name = string
   })
 ```
 
@@ -343,6 +358,10 @@ Description: A map of private endpoints. The map key is the supplied input to va
 ### <a name="output_resource"></a> [resource](#output\_resource)
 
 Description: This is the full output for the resource.
+
+### <a name="output_resource_eventhubs"></a> [resource\_eventhubs](#output\_resource\_eventhubs)
+
+Description: A map of event hubs.  The map key is the supplied input to var.event\_hubs. The map value is the entire azurerm\_event\_hubs resource.
 
 ## Modules
 
