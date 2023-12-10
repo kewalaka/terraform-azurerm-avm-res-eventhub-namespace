@@ -18,7 +18,7 @@ variable "enable_telemetry" {
   default     = true
   description = <<DESCRIPTION
 This variable controls whether or not telemetry is enabled for the module.
-For more information see https://aka.ms/avm/telemetryinfo.
+For more information see <https://aka.ms/avm/telemetryinfo>.
 If it is set to false, then no telemetry will be collected.
 DESCRIPTION
 }
@@ -63,20 +63,14 @@ locals {
     eh_capture_example = {
       name                = module.naming.eventhub.name_unique
       namespace_name      = module.event-hub.resource.id
-      partition_count     = 4
+      partition_count     = 1
       message_retention   = 7
       resource_group_name = module.event-hub.resource.name
-      status              = "Active"
 
       capture_description = {
-        enabled             = true
-        encoding            = "Avro"
-        interval_in_seconds = 300
-        size_limit_in_bytes = 314572800
-        skip_empty_archives = false
-
+        enabled  = true
+        encoding = "Avro"
         destination = {
-          name                = "EventHubArchive.AzureBlockBlob"
           archive_name_format = "{Namespace}/{EventHub}/{PartitionId}/{Year}/{Month}/{Day}/{Hour}/{Minute}/{Second}"
           blob_container_name = azurerm_storage_container.this.name
           storage_account_id  = azurerm_storage_account.this.id
