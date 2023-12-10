@@ -15,3 +15,15 @@ locals {
     ]
   ]) : "${assoc.pe_key}-${assoc.asg_key}" => assoc }
 }
+
+locals {
+  event_hub_role_assignments = { for ra in flatten([
+    for sk, sv in var.event_hubs : [
+      for rk, rv in sv.role_assignments : {
+        event_hub_key   = sk
+        ra_key          = rk
+        role_assignment = rv
+      }
+    ]
+  ]) : "${ra.event_hub_key}-${ra.ra_key}" => ra }
+}

@@ -37,7 +37,6 @@ resource "azurerm_resource_group" "this" {
 locals {
   event_hubs = {
     my_event_hub = {
-      name                = module.naming.eventhub.name_unique
       namespace_name      = module.event-hub.resource.id
       partition_count     = 1
       message_retention   = 7
