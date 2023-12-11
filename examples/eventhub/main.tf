@@ -17,7 +17,7 @@ variable "enable_telemetry" {
   default     = true
   description = <<DESCRIPTION
 This variable controls whether or not telemetry is enabled for the module.
-For more information see https://aka.ms/avm/telemetryinfo.
+For more information see <https://aka.ms/avm/telemetryinfo>.
 If it is set to false, then no telemetry will be collected.
 DESCRIPTION
 }
@@ -37,7 +37,6 @@ resource "azurerm_resource_group" "this" {
 locals {
   event_hubs = {
     my_event_hub = {
-      name                = module.naming.eventhub.name_unique
       namespace_name      = module.event-hub.resource.id
       partition_count     = 1
       message_retention   = 7

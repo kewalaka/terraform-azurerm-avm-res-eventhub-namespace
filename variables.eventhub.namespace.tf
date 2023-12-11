@@ -2,12 +2,16 @@ variable "eventhub_namespace_sku" {
   description = "Defines which tier to use for the Event Hub Namespace. Valid options are Basic, Standard, and Premium."
   type        = string
   default     = "Standard" # You can set a default value or leave it blank depending on your requirements
+  validation {
+    condition     = contains(["Basic", "Standard", "Premium"], var.eventhub_namespace_sku)
+    error_message = "The default_action value must be either `Basic`, `Standard`, or `Premium`."
+  }
 }
 
 variable "eventhub_namespace_capacity" {
   description = <<DESCRIPTION
-Specifies the Capacity / Throughput Units for a Standard SKU namespace.  
-Default capacity has a maximum of 2, but can be increased in blocks of 2 on a committed purchase basis. 
+Specifies the Capacity / Throughput Units for a Standard SKU namespace.
+Default capacity has a maximum of 2, but can be increased in blocks of 2 on a committed purchase basis.
 Defaults to 1.
 DESCRIPTION
   type        = number
@@ -40,21 +44,20 @@ variable "eventhub_namespace_maximum_throughput_units" {
 variable "eventhub_namespace_zone_redundant" {
   description = "Specifies if the EventHub Namespace should be Zone Redundant (created across Availability Zones). Changing this forces a new resource to be created. Defaults to `true`."
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "eventhub_namespace_local_authentication_enabled" {
-  description = "Is SAS authentication enabled for the EventHub Namespace?"
+  description = "Is SAS authentication enabled for the EventHub Namespace?.  Defaults to `false`."
   type        = bool
-  default     = true
+  default     = false
 }
 
 variable "eventhub_namespace_public_network_access_enabled" {
-  description = "Is public network access enabled for the EventHub Namespace?"
+  description = "Is public network access enabled for the EventHub Namespace?  Defaults to `false`."
   type        = bool
-  default     = true
+  default     = false
 }
-
 
 variable "eventhub_network_rulesets" {
   type = object({
@@ -76,14 +79,14 @@ variable "eventhub_network_rulesets" {
     error_message = "The default_action value must be either `Allow` or `Deny`."
   }
   description = <<DESCRIPTION
-The network rule set configuration for the Container Registry.
+The network rule set configuration for the resource.
 Requires Premium SKU.
 
 - `default_action` - (Optional) The default action when no rule matches. Possible values are `Allow` and `Deny`. Defaults to `Deny`.
 - `ip_rule` - (Optional) A list of IP rules in CIDR format. Defaults to `[]`.
   - `action` - Only "Allow" is permitted
   - `ip_mask` - The CIDR block from which requests will match the rule.
-- `virtual_network_rule` - (Optional) When using with Service Endpoints, a list of subnet IDs to associate with the Container Registry. Defaults to `[]`.
+- `virtual_network_rule` - (Optional) When using with Service Endpoints, a list of subnet IDs to associate with the resource. Defaults to `[]`.
   - `ignore_missing_virtual_network_service_endpoint` - Are missing virtual network service endpoints ignored?
   - `subnet_id` - The subnet id from which requests will match the rule.
 

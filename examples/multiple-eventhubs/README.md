@@ -1,7 +1,7 @@
 <!-- BEGIN_TF_DOCS -->
-# Default example
+# Two event hubs with role assignments
 
-This deploys a single example event hub, with event hub capture enabled.
+This deploys two example event hubs, illustrating role assignments.
 
 ```hcl
 terraform {
@@ -81,8 +81,28 @@ locals {
           storage_account_id  = azurerm_storage_account.this.id
         }
       }
+
+      role_assignments = {
+        eh_sender_role = {
+          role_definition_id_or_name = "Azure Event Hubs Data sender"
+          principal_id               = data.azurerm_client_config.this.object_id
+        }
+      }
+    },
+    eh_another_hub = {
+      namespace_name      = module.event-hub.resource.id
+      partition_count     = 2
+      message_retention   = 3
+      resource_group_name = module.event-hub.resource.name
+
+      role_assignments = {
+        eh_receiver_role = {
+          role_definition_id_or_name = "Azure Event Hubs Data receiver"
+          principal_id               = data.azurerm_client_config.this.object_id
+        }
+      }
+
     }
-    // Add more event hubs if needed
   }
 }
 
