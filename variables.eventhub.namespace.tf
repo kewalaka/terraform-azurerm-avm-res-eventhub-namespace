@@ -62,6 +62,8 @@ variable "public_network_access_enabled" {
 variable "network_rulesets" {
   type = object({
     default_action = optional(string, "Deny")
+    public_network_access_enabled  = bool
+    trusted_service_access_enabled = bool
     ip_rule = optional(list(object({
       # since the `action` property only permits `Allow`, this is hard-coded.
       action  = optional(string, "Allow")
