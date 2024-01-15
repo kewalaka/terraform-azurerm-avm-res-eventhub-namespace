@@ -3,7 +3,7 @@ variable "enable_telemetry" {
   default     = true
   description = <<DESCRIPTION
 This variable controls whether or not telemetry is enabled for the module.
-For more information see https://aka.ms/avm/telemetryinfo.
+For more information see <https://aka.ms/avm/telemetryinfo>.
 If it is set to false, then no telemetry will be collected.
 DESCRIPTION
 }
@@ -43,6 +43,14 @@ variable "lock" {
     condition     = contains(["CanNotDelete", "ReadOnly", "None"], var.lock.kind)
     error_message = "The lock level must be one of: 'None', 'CanNotDelete', or 'ReadOnly'."
   }
+}
+
+variable "existing_parent_resource" {
+  description = "If supplied, this event hub namespace resource will be used by child resources (e.g. event hubs), instead of creating a new event hub namespace."
+  type = object({
+    name = string
+  })
+  default = null
 }
 
 variable "managed_identities" {
