@@ -3,7 +3,7 @@ variable "sku" {
   type        = string
   default     = "Standard" # You can set a default value or leave it blank depending on your requirements
   validation {
-    condition     = contains(["Basic", "Standard", "Premium"], sku)
+    condition     = contains(["Basic", "Standard", "Premium"], var.sku)
     error_message = "The default_action value must be either `Basic`, `Standard`, or `Premium`."
   }
 }
@@ -36,7 +36,7 @@ variable "maximum_throughput_units" {
   default     = null
 
   validation {
-    condition     = maximum_throughput_units == null ? true : maximum_throughput_units < 1 || maximum_throughput_units > 20
+    condition     = var.maximum_throughput_units == null ? true : var.maximum_throughput_units < 1 || var.maximum_throughput_units > 20
     error_message = "Maximum throughput units must be in the range of 1 to 20"
   }
 }
