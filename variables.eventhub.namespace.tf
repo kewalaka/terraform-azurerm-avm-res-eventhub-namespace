@@ -59,7 +59,7 @@ variable "public_network_access_enabled" {
   default     = false
 }
 
-variable "eventhub_network_rulesets" {
+variable "network_rulesets" {
   type = object({
     default_action = optional(string, "Deny")
     ip_rule = optional(list(object({

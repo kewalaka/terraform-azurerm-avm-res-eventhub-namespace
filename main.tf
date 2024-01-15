@@ -35,7 +35,7 @@ resource "azurerm_eventhub_namespace" "this" {
 
 
   dynamic "network_rulesets" {
-    for_each = var.eventhub_network_rulesets != null ? { this = var.eventhub_network_rulesets } : {}
+    for_each = var.network_rulesets != null ? { this = var.network_rulesets } : {}
     content {
       default_action                 = var.network_rulesets.value.default_action
       public_network_access_enabled  = var.network_rulesets.value.public_network_access_enabled
