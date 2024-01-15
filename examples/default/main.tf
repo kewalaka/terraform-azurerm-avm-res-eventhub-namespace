@@ -32,8 +32,4 @@ module "event-hub" {
   enable_telemetry    = false
   name                = module.naming.eventhub_namespace.name_unique
   resource_group_name = azurerm_resource_group.this.name
-
-  eventhub_namespace_public_network_access_enabled = true
-  eventhub_namespace_zone_redundant                = false
-  eventhub_namespace_local_authentication_enabled  = true
 }

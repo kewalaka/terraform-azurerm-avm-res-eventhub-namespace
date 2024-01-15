@@ -59,9 +59,11 @@ variable "public_network_access_enabled" {
   default     = false
 }
 
-variable "eventhub_network_rulesets" {
+variable "network_rulesets" {
   type = object({
     default_action = optional(string, "Deny")
+    public_network_access_enabled  = bool
+    trusted_service_access_enabled = bool
     ip_rule = optional(list(object({
       # since the `action` property only permits `Allow`, this is hard-coded.
       action  = optional(string, "Allow")
@@ -75,7 +77,7 @@ variable "eventhub_network_rulesets" {
   })
   default = null
   validation {
-    condition     = var.eventhub_network_rulesets == null ? true : contains(["Allow", "Deny"], var.eventhub_network_rulesets.default_action)
+    condition     = var.network_rulesets == null ? true : contains(["Allow", "Deny"], var.network_rulesets.default_action)
     error_message = "The default_action value must be either `Allow` or `Deny`."
   }
   description = <<DESCRIPTION

@@ -26,34 +26,34 @@ resource "azurerm_eventhub_namespace" "this" {
   zone_redundant = var.zone_redundant
 
   dynamic "identity" {
-    for_each = var.managed_identities != null ? { this = var.managed_identities } : {}
+    for_each = var.managed_identities != {} ? { this = var.managed_identities } : {}
     content {
-      type         = var.identity.value.system_assigned && length(var.identity.value.user_assigned_resource_ids) > 0 ? "SystemAssigned, UserAssigned" : length(var.identity.value.user_assigned_resource_ids) > 0 ? "UserAssigned" : "SystemAssigned"
-      identity_ids = var.identity.value.user_assigned_resource_ids
+      type         = identity.value.system_assigned && length(identity.value.user_assigned_resource_ids) > 0 ? "SystemAssigned, UserAssigned" : length(identity.value.user_assigned_resource_ids) > 0 ? "UserAssigned" : "SystemAssigned"
+      identity_ids = identity.value.user_assigned_resource_ids
     }
   }
 
 
   dynamic "network_rulesets" {
-    for_each = var.eventhub_network_rulesets != null ? { this = var.eventhub_network_rulesets } : {}
+    for_each = var.network_rulesets != null ? { this = var.network_rulesets } : {}
     content {
-      default_action                 = var.network_rulesets.value.default_action
-      public_network_access_enabled  = var.network_rulesets.value.public_network_access_enabled
-      trusted_service_access_enabled = var.network_rulesets.value.trusted_service_access_enabled
+      default_action                 = network_rulesets.value.default_action
+      public_network_access_enabled  = network_rulesets.value.public_network_access_enabled
+      trusted_service_access_enabled = network_rulesets.value.trusted_service_access_enabled
 
       dynamic "ip_rule" {
-        for_each = var.network_rulesets.value.ip_rule
+        for_each = network_rulesets.value.ip_rule
         content {
-          action  = var.ip_rule.value.action
-          ip_mask = var.ip_rule.value.ip_mask
+          action  = ip_rule.value.action
+          ip_mask = ip_rule.value.ip_mask
         }
       }
 
       dynamic "virtual_network_rule" {
-        for_each = var.network_rulesets.value.virtual_network_rule
+        for_each = network_rulesets.value.virtual_network_rule
         content {
-          ignore_missing_virtual_network_service_endpoint = var.virtual_network_rule.value.ignore_missing_virtual_network_service_endpoint
-          subnet_id                                       = var.virtual_network_rule.value.subnet_id
+          ignore_missing_virtual_network_service_endpoint = virtual_network_rule.value.ignore_missing_virtual_network_service_endpoint
+          subnet_id                                       = virtual_network_rule.value.subnet_id
         }
       }
     }
@@ -73,13 +73,13 @@ resource "azurerm_eventhub_namespace" "this" {
 resource "azurerm_management_lock" "this" {
   count      = var.lock.kind != "None" ? 1 : 0
   name       = coalesce(var.lock.name, "lock-${var.name}")
-  scope      = var.azurerm_eventhub_namespace.this[0].id
+  scope      = azurerm_eventhub_namespace.this[0].id
   lock_level = var.lock.kind
 }
 
 resource "azurerm_role_assignment" "this" {
   for_each                               = var.role_assignments
-  scope                                  = var.azurerm_eventhub_namespace.this[0].id
+  scope                                  = azurerm_eventhub_namespace.this[0].id
   role_definition_id                     = strcontains(lower(each.value.role_definition_id_or_name), lower(local.role_definition_resource_substring)) ? each.value.role_definition_id_or_name : null
   role_definition_name                   = strcontains(lower(each.value.role_definition_id_or_name), lower(local.role_definition_resource_substring)) ? null : each.value.role_definition_id_or_name
   principal_id                           = each.value.principal_id
