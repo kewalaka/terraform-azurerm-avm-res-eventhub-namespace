@@ -1,14 +1,14 @@
-variable "eventhub_namespace_sku" {
+variable "sku" {
   description = "Defines which tier to use for the Event Hub Namespace. Valid options are Basic, Standard, and Premium."
   type        = string
   default     = "Standard" # You can set a default value or leave it blank depending on your requirements
   validation {
-    condition     = contains(["Basic", "Standard", "Premium"], var.eventhub_namespace_sku)
+    condition     = contains(["Basic", "Standard", "Premium"], sku)
     error_message = "The default_action value must be either `Basic`, `Standard`, or `Premium`."
   }
 }
 
-variable "eventhub_namespace_capacity" {
+variable "capacity" {
   description = <<DESCRIPTION
 Specifies the Capacity / Throughput Units for a Standard SKU namespace.
 Default capacity has a maximum of 2, but can be increased in blocks of 2 on a committed purchase basis.
@@ -18,42 +18,42 @@ DESCRIPTION
   default     = 1
 }
 
-variable "eventhub_namespace_auto_inflate_enabled" {
+variable "auto_inflate_enabled" {
   description = "Is Auto Inflate enabled for the EventHub Namespace?"
   type        = bool
   default     = false
 }
 
-variable "eventhub_namespace_dedicated_cluster_id" {
+variable "dedicated_cluster_id" {
   description = "Specifies the ID of the EventHub Dedicated Cluster where this Namespace should be created.  Changing this forces a new resource to be created."
   type        = string
   default     = null
 }
 
-variable "eventhub_namespace_maximum_throughput_units" {
+variable "maximum_throughput_units" {
   description = "Specifies the maximum number of throughput units when Auto Inflate is Enabled. Valid values range from 1 - 20."
   type        = number
   default     = null
 
   validation {
-    condition     = var.eventhub_namespace_maximum_throughput_units == null ? true : var.eventhub_namespace_maximum_throughput_units < 1 || var.eventhub_namespace_maximum_throughput_units > 20
+    condition     = maximum_throughput_units == null ? true : maximum_throughput_units < 1 || maximum_throughput_units > 20
     error_message = "Maximum throughput units must be in the range of 1 to 20"
   }
 }
 
-variable "eventhub_namespace_zone_redundant" {
+variable "zone_redundant" {
   description = "Specifies if the EventHub Namespace should be Zone Redundant (created across Availability Zones). Changing this forces a new resource to be created. Defaults to `true`."
   type        = bool
   default     = true
 }
 
-variable "eventhub_namespace_local_authentication_enabled" {
+variable "local_authentication_enabled" {
   description = "Is SAS authentication enabled for the EventHub Namespace?.  Defaults to `false`."
   type        = bool
   default     = false
 }
 
-variable "eventhub_namespace_public_network_access_enabled" {
+variable "public_network_access_enabled" {
   description = "Is public network access enabled for the EventHub Namespace?  Defaults to `false`."
   type        = bool
   default     = false
