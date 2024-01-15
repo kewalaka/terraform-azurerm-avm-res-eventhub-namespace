@@ -26,10 +26,10 @@ resource "azurerm_eventhub_namespace" "this" {
   zone_redundant = var.zone_redundant
 
   dynamic "identity" {
-    for_each = var.managed_identities != null ? { this = var.managed_identities } : {}
+    for_each = var.managed_identities != {} ? { this = var.managed_identities } : {}
     content {
-      type         = var.identity.value.system_assigned && length(var.identity.value.user_assigned_resource_ids) > 0 ? "SystemAssigned, UserAssigned" : length(var.identity.value.user_assigned_resource_ids) > 0 ? "UserAssigned" : "SystemAssigned"
-      identity_ids = var.identity.value.user_assigned_resource_ids
+      type         = identity.value.system_assigned && length(identity.value.user_assigned_resource_ids) > 0 ? "SystemAssigned, UserAssigned" : length(identity.value.user_assigned_resource_ids) > 0 ? "UserAssigned" : "SystemAssigned"
+      identity_ids = identity.value.user_assigned_resource_ids
     }
   }
 
