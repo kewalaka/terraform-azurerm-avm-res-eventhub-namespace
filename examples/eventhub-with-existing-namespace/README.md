@@ -41,16 +41,16 @@ resource "azurerm_eventhub_namespace" "this" {
 locals {
   event_hubs = {
     event_hub_existing_namespace = {
-      namespace_name      = module.event-hub.resource.id
+      namespace_name      = module.event_hub.resource.id
       partition_count     = 2
       message_retention   = 3
-      resource_group_name = module.event-hub.resource.name
+      resource_group_name = module.event_hub.resource.name
     }
-    // Add more event hubs if needed
+    # Add more event hubs if needed
   }
 }
 
-module "event-hub" {
+module "event_hub" {
   source = "../../"
   # source             = "Azure/avm-<res/ptn>-<name>/azurerm"
   # ...
@@ -102,7 +102,7 @@ No outputs.
 
 The following Modules are called:
 
-### <a name="module_event-hub"></a> [event-hub](#module\_event-hub)
+### <a name="module_event_hub"></a> [event\_hub](#module\_event\_hub)
 
 Source: ../../
 

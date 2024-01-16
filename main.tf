@@ -14,19 +14,19 @@ resource "azurerm_eventhub_namespace" "this" {
   name                          = var.name # calling code must supply the name
   resource_group_name           = var.resource_group_name
   location                      = try(data.azurerm_resource_group.parent[0].location, var.location)
-  sku                           = var.eventhub_namespace_sku
-  capacity                      = var.eventhub_namespace_capacity
-  auto_inflate_enabled          = var.eventhub_namespace_auto_inflate_enabled
-  dedicated_cluster_id          = var.eventhub_namespace_dedicated_cluster_id
-  local_authentication_enabled  = var.eventhub_namespace_local_authentication_enabled
-  maximum_throughput_units      = var.eventhub_namespace_maximum_throughput_units
+  sku                           = var.sku
+  capacity                      = var.capacity
+  auto_inflate_enabled          = var.auto_inflate_enabled
+  dedicated_cluster_id          = var.dedicated_cluster_id
+  local_authentication_enabled  = var.local_authentication_enabled
+  maximum_throughput_units      = var.maximum_throughput_units
   minimum_tls_version           = 1.2
-  public_network_access_enabled = var.eventhub_namespace_public_network_access_enabled
+  public_network_access_enabled = var.public_network_access_enabled
 
-  zone_redundant = var.eventhub_namespace_zone_redundant
+  zone_redundant = var.zone_redundant
 
   dynamic "identity" {
-    for_each = var.managed_identities != null ? { this = var.managed_identities } : {}
+    for_each = var.managed_identities != {} ? { this = var.managed_identities } : {}
     content {
       type         = identity.value.system_assigned && length(identity.value.user_assigned_resource_ids) > 0 ? "SystemAssigned, UserAssigned" : length(identity.value.user_assigned_resource_ids) > 0 ? "UserAssigned" : "SystemAssigned"
       identity_ids = identity.value.user_assigned_resource_ids
@@ -35,7 +35,7 @@ resource "azurerm_eventhub_namespace" "this" {
 
 
   dynamic "network_rulesets" {
-    for_each = var.eventhub_network_rulesets != null ? { this = var.eventhub_network_rulesets } : {}
+    for_each = var.network_rulesets != null ? { this = var.network_rulesets } : {}
     content {
       default_action                 = network_rulesets.value.default_action
       public_network_access_enabled  = network_rulesets.value.public_network_access_enabled
@@ -63,7 +63,7 @@ resource "azurerm_eventhub_namespace" "this" {
 
   lifecycle {
     precondition {
-      condition     = var.eventhub_namespace_maximum_throughput_units == null && !var.eventhub_namespace_auto_inflate_enabled
+      condition     = var.maximum_throughput_units == null && !var.auto_inflate_enabled
       error_message = "Cannot set MaximumThroughputUnits property if AutoInflate is not enabled."
     }
   }
