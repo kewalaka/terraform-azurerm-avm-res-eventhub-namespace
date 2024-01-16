@@ -41,10 +41,10 @@ resource "azurerm_eventhub_namespace" "this" {
 locals {
   event_hubs = {
     event_hub_existing_namespace = {
-      namespace_name      = module.event-hub.resource.id
+      namespace_name      = module.event_hub.resource.id
       partition_count     = 2
       message_retention   = 3
-      resource_group_name = module.event-hub.resource.name
+      resource_group_name = module.event_hub.resource.name
     }
     # Add more event hubs if needed
   }
