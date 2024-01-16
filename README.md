@@ -62,6 +62,83 @@ Type: `string`
 
 The following input variables are optional (have default values):
 
+### <a name="input_auto_inflate_enabled"></a> [auto\_inflate\_enabled](#input\_auto\_inflate\_enabled)
+
+Description: Is Auto Inflate enabled for the EventHub Namespace?
+
+Type: `bool`
+
+Default: `false`
+
+### <a name="input_capacity"></a> [capacity](#input\_capacity)
+
+Description: Specifies the Capacity / Throughput Units for a Standard SKU namespace.  
+Default capacity has a maximum of 2, but can be increased in blocks of 2 on a committed purchase basis.  
+Defaults to 1.
+
+Type: `number`
+
+Default: `1`
+
+### <a name="input_customer_managed_key"></a> [customer\_managed\_key](#input\_customer\_managed\_key)
+
+Description: Customer managed keys that should be associated with the resource.
+
+Type:
+
+```hcl
+object({
+    key_vault_resource_id              = optional(string)
+    key_name                           = optional(string)
+    key_version                        = optional(string, null)
+    user_assigned_identity_resource_id = optional(string, null)
+  })
+```
+
+Default: `{}`
+
+### <a name="input_dedicated_cluster_id"></a> [dedicated\_cluster\_id](#input\_dedicated\_cluster\_id)
+
+Description: Specifies the ID of the EventHub Dedicated Cluster where this Namespace should be created.  Changing this forces a new resource to be created.
+
+Type: `string`
+
+Default: `null`
+
+### <a name="input_diagnostic_settings"></a> [diagnostic\_settings](#input\_diagnostic\_settings)
+
+Description: A map of diagnostic settings to create on the Key Vault. The map key is deliberately arbitrary to avoid issues where map keys maybe unknown at plan time.
+
+- `name` - (Optional) The name of the diagnostic setting. One will be generated if not set, however this will not be unique if you want to create multiple diagnostic setting resources.
+- `log_categories` - (Optional) A set of log categories to send to the log analytics workspace. Defaults to `[]`.
+- `log_groups` - (Optional) A set of log groups to send to the log analytics workspace. Defaults to `["allLogs"]`.
+- `metric_categories` - (Optional) A set of metric categories to send to the log analytics workspace. Defaults to `["AllMetrics"]`.
+- `log_analytics_destination_type` - (Optional) The destination type for the diagnostic setting. Possible values are `Dedicated` and `AzureDiagnostics`. Defaults to `Dedicated`.
+- `workspace_resource_id` - (Optional) The resource ID of the log analytics workspace to send logs and metrics to.
+- `storage_account_resource_id` - (Optional) The resource ID of the storage account to send logs and metrics to.
+- `event_hub_authorization_rule_resource_id` - (Optional) The resource ID of the event hub authorization rule to send logs and metrics to.
+- `event_hub_name` - (Optional) The name of the event hub. If none is specified, the default event hub will be selected.
+- `marketplace_partner_resource_id` - (Optional) The full ARM resource ID of the Marketplace resource to which you would like to send Diagnostic LogsLogs.
+
+Type:
+
+```hcl
+map(object({
+    name                                     = optional(string, null)
+    log_categories                           = optional(set(string), [])
+    log_groups                               = optional(set(string), ["allLogs"])
+    metric_categories                        = optional(set(string), ["AllMetrics"])
+    log_analytics_destination_type           = optional(string, "Dedicated")
+    workspace_resource_id                    = optional(string, null)
+    storage_account_resource_id              = optional(string, null)
+    event_hub_authorization_rule_resource_id = optional(string, null)
+    event_hub_name                           = optional(string, null)
+    marketplace_partner_resource_id          = optional(string, null)
+  }))
+```
+
+Default: `{}`
+
 ### <a name="input_enable_telemetry"></a> [enable\_telemetry](#input\_enable\_telemetry)
 
 Description: This variable controls whether or not telemetry is enabled for the module.  
@@ -134,105 +211,6 @@ map(object({
 
 Default: `{}`
 
-### <a name="input_eventhub_namespace_auto_inflate_enabled"></a> [eventhub\_namespace\_auto\_inflate\_enabled](#input\_eventhub\_namespace\_auto\_inflate\_enabled)
-
-Description: Is Auto Inflate enabled for the EventHub Namespace?
-
-Type: `bool`
-
-Default: `false`
-
-### <a name="input_eventhub_namespace_capacity"></a> [eventhub\_namespace\_capacity](#input\_eventhub\_namespace\_capacity)
-
-Description: Specifies the Capacity / Throughput Units for a Standard SKU namespace.  
-Default capacity has a maximum of 2, but can be increased in blocks of 2 on a committed purchase basis.  
-Defaults to 1.
-
-Type: `number`
-
-Default: `1`
-
-### <a name="input_eventhub_namespace_dedicated_cluster_id"></a> [eventhub\_namespace\_dedicated\_cluster\_id](#input\_eventhub\_namespace\_dedicated\_cluster\_id)
-
-Description: Specifies the ID of the EventHub Dedicated Cluster where this Namespace should be created.  Changing this forces a new resource to be created.
-
-Type: `string`
-
-Default: `null`
-
-### <a name="input_eventhub_namespace_local_authentication_enabled"></a> [eventhub\_namespace\_local\_authentication\_enabled](#input\_eventhub\_namespace\_local\_authentication\_enabled)
-
-Description: Is SAS authentication enabled for the EventHub Namespace?.  Defaults to `false`.
-
-Type: `bool`
-
-Default: `false`
-
-### <a name="input_eventhub_namespace_maximum_throughput_units"></a> [eventhub\_namespace\_maximum\_throughput\_units](#input\_eventhub\_namespace\_maximum\_throughput\_units)
-
-Description: Specifies the maximum number of throughput units when Auto Inflate is Enabled. Valid values range from 1 - 20.
-
-Type: `number`
-
-Default: `null`
-
-### <a name="input_eventhub_namespace_public_network_access_enabled"></a> [eventhub\_namespace\_public\_network\_access\_enabled](#input\_eventhub\_namespace\_public\_network\_access\_enabled)
-
-Description: Is public network access enabled for the EventHub Namespace?  Defaults to `false`.
-
-Type: `bool`
-
-Default: `false`
-
-### <a name="input_eventhub_namespace_sku"></a> [eventhub\_namespace\_sku](#input\_eventhub\_namespace\_sku)
-
-Description: Defines which tier to use for the Event Hub Namespace. Valid options are Basic, Standard, and Premium.
-
-Type: `string`
-
-Default: `"Standard"`
-
-### <a name="input_eventhub_namespace_zone_redundant"></a> [eventhub\_namespace\_zone\_redundant](#input\_eventhub\_namespace\_zone\_redundant)
-
-Description: Specifies if the EventHub Namespace should be Zone Redundant (created across Availability Zones). Changing this forces a new resource to be created. Defaults to `true`.
-
-Type: `bool`
-
-Default: `true`
-
-### <a name="input_eventhub_network_rulesets"></a> [eventhub\_network\_rulesets](#input\_eventhub\_network\_rulesets)
-
-Description: The network rule set configuration for the resource.  
-Requires Premium SKU.
-
-- `default_action` - (Optional) The default action when no rule matches. Possible values are `Allow` and `Deny`. Defaults to `Deny`.
-- `ip_rule` - (Optional) A list of IP rules in CIDR format. Defaults to `[]`.
-  - `action` - Only "Allow" is permitted
-  - `ip_mask` - The CIDR block from which requests will match the rule.
-- `virtual_network_rule` - (Optional) When using with Service Endpoints, a list of subnet IDs to associate with the resource. Defaults to `[]`.
-  - `ignore_missing_virtual_network_service_endpoint` - Are missing virtual network service endpoints ignored?
-  - `subnet_id` - The subnet id from which requests will match the rule.
-
-Type:
-
-```hcl
-object({
-    default_action = optional(string, "Deny")
-    ip_rule = optional(list(object({
-      # since the `action` property only permits `Allow`, this is hard-coded.
-      action  = optional(string, "Allow")
-      ip_mask = string
-    })), [])
-    virtual_network_rule = optional(list(object({
-      # since the `action` property only permits `Allow`, this is hard-coded.
-      ignore_missing_virtual_network_service_endpoint = optional(bool)
-      subnet_id                                       = string
-    })), [])
-  })
-```
-
-Default: `null`
-
 ### <a name="input_existing_parent_resource"></a> [existing\_parent\_resource](#input\_existing\_parent\_resource)
 
 Description: If supplied, this event hub namespace resource will be used by child resources (e.g. event hubs), instead of creating a new event hub namespace.
@@ -246,6 +224,14 @@ object({
 ```
 
 Default: `null`
+
+### <a name="input_local_authentication_enabled"></a> [local\_authentication\_enabled](#input\_local\_authentication\_enabled)
+
+Description: Is SAS authentication enabled for the EventHub Namespace?.  Defaults to `false`.
+
+Type: `bool`
+
+Default: `false`
 
 ### <a name="input_location"></a> [location](#input\_location)
 
@@ -272,7 +258,7 @@ Default: `{}`
 
 ### <a name="input_managed_identities"></a> [managed\_identities](#input\_managed\_identities)
 
-Description: n/a
+Description: Managed identities to be created for the resource.
 
 Type:
 
@@ -284,6 +270,49 @@ object({
 ```
 
 Default: `{}`
+
+### <a name="input_maximum_throughput_units"></a> [maximum\_throughput\_units](#input\_maximum\_throughput\_units)
+
+Description: Specifies the maximum number of throughput units when Auto Inflate is Enabled. Valid values range from 1 - 20.
+
+Type: `number`
+
+Default: `null`
+
+### <a name="input_network_rulesets"></a> [network\_rulesets](#input\_network\_rulesets)
+
+Description: The network rule set configuration for the resource.  
+Requires Premium SKU.
+
+- `default_action` - (Optional) The default action when no rule matches. Possible values are `Allow` and `Deny`. Defaults to `Deny`.
+- `ip_rule` - (Optional) A list of IP rules in CIDR format. Defaults to `[]`.
+  - `action` - Only "Allow" is permitted
+  - `ip_mask` - The CIDR block from which requests will match the rule.
+- `virtual_network_rule` - (Optional) When using with Service Endpoints, a list of subnet IDs to associate with the resource. Defaults to `[]`.
+  - `ignore_missing_virtual_network_service_endpoint` - Are missing virtual network service endpoints ignored?
+  - `subnet_id` - The subnet id from which requests will match the rule.
+
+Type:
+
+```hcl
+object({
+    default_action = optional(string, "Deny")
+    public_network_access_enabled  = bool
+    trusted_service_access_enabled = bool
+    ip_rule = optional(list(object({
+      # since the `action` property only permits `Allow`, this is hard-coded.
+      action  = optional(string, "Allow")
+      ip_mask = string
+    })), [])
+    virtual_network_rule = optional(list(object({
+      # since the `action` property only permits `Allow`, this is hard-coded.
+      ignore_missing_virtual_network_service_endpoint = optional(bool)
+      subnet_id                                       = string
+    })), [])
+  })
+```
+
+Default: `null`
 
 ### <a name="input_private_endpoints"></a> [private\_endpoints](#input\_private\_endpoints)
 
@@ -341,6 +370,14 @@ map(object({
 
 Default: `{}`
 
+### <a name="input_public_network_access_enabled"></a> [public\_network\_access\_enabled](#input\_public\_network\_access\_enabled)
+
+Description: Is public network access enabled for the EventHub Namespace?  Defaults to `false`.
+
+Type: `bool`
+
+Default: `false`
+
 ### <a name="input_role_assignments"></a> [role\_assignments](#input\_role\_assignments)
 
 Description: A map of role assignments to create on this resource. The map key is deliberately arbitrary to avoid issues where map keys maybe unknown at plan time.
@@ -370,13 +407,29 @@ map(object({
 
 Default: `{}`
 
+### <a name="input_sku"></a> [sku](#input\_sku)
+
+Description: Defines which tier to use for the Event Hub Namespace. Valid options are Basic, Standard, and Premium.
+
+Type: `string`
+
+Default: `"Standard"`
+
 ### <a name="input_tags"></a> [tags](#input\_tags)
 
-Description: n/a
+Description: The map of tags to be applied to the resource
 
 Type: `map(any)`
 
 Default: `{}`
+
+### <a name="input_zone_redundant"></a> [zone\_redundant](#input\_zone\_redundant)
+
+Description: Specifies if the EventHub Namespace should be Zone Redundant (created across Availability Zones). Changing this forces a new resource to be created. Defaults to `true`.
+
+Type: `bool`
+
+Default: `true`
 
 ## Outputs
 

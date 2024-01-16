@@ -76,11 +76,11 @@ locals {
         }
       }
     }
-    // Add more event hubs if needed
+    # Add more event hubs if needed
   }
 }
 
-module "event-hub" {
+module "event_hub" {
   source = "../../"
   # source             = "Azure/avm-<res/ptn>-<name>/azurerm"
   # ...

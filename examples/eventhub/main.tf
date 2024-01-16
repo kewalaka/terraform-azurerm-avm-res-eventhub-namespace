@@ -45,7 +45,7 @@ locals {
   }
 }
 
-module "event-hub" {
+module "event_hub" {
   source = "../../"
   # source             = "Azure/avm-<res/ptn>-<name>/azurerm"
   # ...

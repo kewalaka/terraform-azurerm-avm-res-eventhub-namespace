@@ -106,7 +106,7 @@ locals {
   }
 }
 
-module "event-hub" {
+module "event_hub" {
   source = "../../"
   # source             = "Azure/avm-<res/ptn>-<name>/azurerm"
   # ...
@@ -174,7 +174,7 @@ No outputs.
 
 The following Modules are called:
 
-### <a name="module_event-hub"></a> [event-hub](#module\_event-hub)
+### <a name="module_event_hub"></a> [event\_hub](#module\_event\_hub)
 
 Source: ../../
 

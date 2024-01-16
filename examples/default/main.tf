@@ -25,7 +25,7 @@ resource "azurerm_resource_group" "this" {
   location = "AustraliaEast"
 }
 
-module "event-hub" {
+module "event_hub" {
   source = "../../"
   # source             = "Azure/avm-<res/ptn>-<name>/azurerm"
   # ...
